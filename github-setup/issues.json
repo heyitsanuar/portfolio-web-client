@@ -1,0 +1,241 @@
+[
+  {
+    "id": "US-001",
+    "title": "Initialize Astro project",
+    "milestone": "M1 — Foundation",
+    "labels": [
+      "foundation",
+      "devops",
+      "priority:high"
+    ],
+    "file": "user-stories/US-001.md"
+  },
+  {
+    "id": "US-002",
+    "title": "Create global design system",
+    "milestone": "M1 — Foundation",
+    "labels": [
+      "design-system",
+      "ui",
+      "priority:high"
+    ],
+    "file": "user-stories/US-002.md"
+  },
+  {
+    "id": "US-003",
+    "title": "Create application shell and responsive container",
+    "milestone": "M1 — Foundation",
+    "labels": [
+      "layout",
+      "responsive",
+      "ui",
+      "priority:high"
+    ],
+    "file": "user-stories/US-003.md"
+  },
+  {
+    "id": "US-004",
+    "title": "Build responsive navigation",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "ui",
+      "navigation",
+      "mobile"
+    ],
+    "file": "user-stories/US-004.md"
+  },
+  {
+    "id": "US-005",
+    "title": "Build Hero section",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "ui",
+      "hero",
+      "responsive",
+      "priority:high"
+    ],
+    "file": "user-stories/US-005.md"
+  },
+  {
+    "id": "US-006",
+    "title": "Build Projects section",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "ui",
+      "projects",
+      "content",
+      "priority:high"
+    ],
+    "file": "user-stories/US-006.md"
+  },
+  {
+    "id": "US-007",
+    "title": "Build mobile Projects carousel",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "mobile",
+      "projects",
+      "interaction"
+    ],
+    "file": "user-stories/US-007.md"
+  },
+  {
+    "id": "US-008",
+    "title": "Build About section",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "about",
+      "ui",
+      "content"
+    ],
+    "file": "user-stories/US-008.md"
+  },
+  {
+    "id": "US-009",
+    "title": "Build Skills section",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "skills",
+      "ui",
+      "responsive"
+    ],
+    "file": "user-stories/US-009.md"
+  },
+  {
+    "id": "US-010",
+    "title": "Build AI & Agents showcase",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "skills",
+      "ai",
+      "ui"
+    ],
+    "file": "user-stories/US-010.md"
+  },
+  {
+    "id": "US-011",
+    "title": "Build Experience timeline",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "experience",
+      "content",
+      "ui",
+      "priority:high"
+    ],
+    "file": "user-stories/US-011.md"
+  },
+  {
+    "id": "US-012",
+    "title": "Build Contact and Footer",
+    "milestone": "M2 — Core UI",
+    "labels": [
+      "contact",
+      "ui"
+    ],
+    "file": "user-stories/US-012.md"
+  },
+  {
+    "id": "US-013",
+    "title": "Build Terminal UI",
+    "milestone": "M3 — Interactions",
+    "labels": [
+      "terminal",
+      "interaction"
+    ],
+    "file": "user-stories/US-013.md"
+  },
+  {
+    "id": "US-014",
+    "title": "Add terminal typing sequence",
+    "milestone": "M3 — Interactions",
+    "labels": [
+      "terminal",
+      "animation"
+    ],
+    "file": "user-stories/US-014.md"
+  },
+  {
+    "id": "US-015",
+    "title": "Add interactive terminal commands",
+    "milestone": "M3 — Interactions",
+    "labels": [
+      "terminal",
+      "interaction",
+      "fun"
+    ],
+    "file": "user-stories/US-015.md"
+  },
+  {
+    "id": "US-016",
+    "title": "Add motion and microinteractions",
+    "milestone": "M4 — Polish & Quality",
+    "labels": [
+      "animation",
+      "polish"
+    ],
+    "file": "user-stories/US-016.md"
+  },
+  {
+    "id": "US-017",
+    "title": "Complete responsive design pass",
+    "milestone": "M4 — Polish & Quality",
+    "labels": [
+      "responsive",
+      "mobile",
+      "priority:high"
+    ],
+    "file": "user-stories/US-017.md"
+  },
+  {
+    "id": "US-018",
+    "title": "Complete accessibility pass",
+    "milestone": "M4 — Polish & Quality",
+    "labels": [
+      "accessibility",
+      "quality"
+    ],
+    "file": "user-stories/US-018.md"
+  },
+  {
+    "id": "US-019",
+    "title": "Optimize performance",
+    "milestone": "M4 — Polish & Quality",
+    "labels": [
+      "performance",
+      "quality"
+    ],
+    "file": "user-stories/US-019.md"
+  },
+  {
+    "id": "US-020",
+    "title": "Add SEO and social metadata",
+    "milestone": "M5 — Release",
+    "labels": [
+      "seo",
+      "release"
+    ],
+    "file": "user-stories/US-020.md"
+  },
+  {
+    "id": "US-021",
+    "title": "Configure GitHub Pages deployment",
+    "milestone": "M5 — Release",
+    "labels": [
+      "devops",
+      "github-pages",
+      "release"
+    ],
+    "file": "user-stories/US-021.md"
+  },
+  {
+    "id": "US-022",
+    "title": "Complete pre-release QA",
+    "milestone": "M5 — Release",
+    "labels": [
+      "qa",
+      "release",
+      "priority:high"
+    ],
+    "file": "user-stories/US-022.md"
+  }
+]
