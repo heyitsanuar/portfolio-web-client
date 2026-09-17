@@ -45,5 +45,48 @@ smoke checks.
 - `src/styles/` — global CSS and Tailwind entry point
 
 Project requirements and user stories live in `AGENTS.md` and `github-setup/`.
-The homepage is a placeholder. Design tokens, portfolio sections, and GitHub
-Pages deployment will be implemented in their respective user stories.
+The homepage is a placeholder. Portfolio sections and GitHub Pages deployment
+will be implemented in their respective user stories.
+
+## Design tokens
+
+`src/styles/global.css` is the single source for portfolio tokens. Tailwind's
+`@theme` exposes semantic utilities such as `bg-page`, `bg-surface`,
+`bg-surface-elevated`, `border-border-subtle`, `text-primary`, `text-secondary`,
+`text-accent`, and `text-terminal`. Use `text-on-accent` on filled purple
+backgrounds. Teal is reserved for terminal details; subtle borders are decorative
+and are not sufficient by themselves to identify interactive controls.
+
+Typography uses `text-small`, `text-body`, `text-lead`, `text-section`, and
+`text-display`, with matching line heights. Use the inherited system `font-sans`
+and `font-mono` stacks, normal/semibold weights, and `tracking-label` for editorial
+labels. Rounded groups can use `rounded-small` (6px) or `rounded-medium` (12px).
+No web fonts, animations, or client-side theme scripts are required.
+
+Local spacing uses Tailwind's existing 4px unit: prefer 8, 12, 16, 24, 32, and
+48px steps (`gap-2`, `gap-3`, `gap-4`, `gap-6`, `gap-8`, `gap-12`). Breakpoints
+reuse Tailwind's `sm` 40rem, `md` 48rem, `lg` 64rem, and `xl` 80rem defaults;
+CSS media queries reference those tokens rather than repeat their values.
+
+| Layout token | Mobile | From md | From lg |
+| --- | --- | --- | --- |
+| `--page-gutter` | 1.5rem / 24px | 2rem / 32px | 2.5rem / 40px |
+| `--section-gap` | 5rem / 80px | 7rem / 112px | 8rem / 128px |
+
+These section gaps are **initial tuning values**, not final visual decisions.
+Use `.section-stack` on a parent of major sections to apply the gap once between
+children; children should not add outer block margins or duplicate this spacing.
+Internal component spacing remains separate. The placeholder uses the rhythm
+token as page padding; it does not yet contain portfolio sections.
+
+`--content-max-width: 72rem` is also an **initial tuning value**. It is deliberately
+unused until US-003 implements the shared container. That story should evaluate
+the width against the wide desktop design, including a two-column Hero, project
+grid, and roughly 40/60 About + Skills layout. The intended container model is
+`min(var(--content-max-width), 100% - 2 × var(--page-gutter))`, centered; individual
+sections should not invent their own horizontal margins.
+
+Base styles set the dark page theme and a purple `:focus-visible` outline (2px
+wide, 4px offset). Preserve this indicator when introducing interactive elements,
+and validate it against their actual surfaces. Future motion must respect
+`prefers-reduced-motion`; this foundation introduces none.
