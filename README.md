@@ -76,15 +76,43 @@ CSS media queries reference those tokens rather than repeat their values.
 These section gaps are **initial tuning values**, not final visual decisions.
 Use `.section-stack` on a parent of major sections to apply the gap once between
 children; children should not add outer block margins or duplicate this spacing.
-Internal component spacing remains separate. The placeholder uses the rhythm
-token as page padding; it does not yet contain portfolio sections.
+Internal component spacing remains separate. The layout uses the rhythm
+token as outer page padding; it does not yet contain portfolio sections.
 
-`--content-max-width: 72rem` is also an **initial tuning value**. It is deliberately
-unused until US-003 implements the shared container. That story should evaluate
-the width against the wide desktop design, including a two-column Hero, project
-grid, and roughly 40/60 About + Skills layout. The intended container model is
-`min(var(--content-max-width), 100% - 2 × var(--page-gutter))`, centered; individual
-sections should not invent their own horizontal margins.
+`--content-max-width: 72rem` is also an **initial tuning value**. The shared
+`.content-container` consumes it directly; adjust this token when validating the
+wide desktop design with a two-column Hero, project grid, and roughly 40/60
+About + Skills layout. Its width is the smaller of the maximum width and the
+available width minus two gutters, centered with automatic inline margins.
+
+## Application shell and container
+
+`Layout.astro` owns the single `<main>` landmark, outer vertical padding, and
+one `.content-container.section-stack` wrapper around its slot. Pages supply
+content groups; they must not add another `<main>`, repeat the container, or
+apply page gutters. The existing heading and paragraph are grouped in one div
+so the section gap does not separate them.
+
+Future major sections will be sibling groups inside this shared wrapper. Each
+group inherits the same available width and owns only its internal layout.
+Do not add independent page margins, duplicate gutters, or outer block margins
+to these groups. The shared stack applies the section gap once between them.
+The reusable `.content-container` class contains only horizontal sizing rules;
+it does not impose columns, typography, or vertical spacing.
+
+At a 16px root font size, expected geometry is:
+
+| Viewport | Content width | Outer space per side |
+| --- | --- | --- |
+| 375px | 327px | 24px |
+| 393px | 345px | 24px |
+| 768px | 704px | 32px |
+| 1024px | 944px | 40px |
+| 1440px | 1152px | 144px |
+
+Gutters are minimum outer space, not extra padding inside the container. Once
+the maximum content width is reached, centering increases the outer space.
+The width, gutters, and section rhythm remain defined only in the design tokens.
 
 Base styles set the dark page theme and a purple `:focus-visible` outline (2px
 wide, 4px offset). Preserve this indicator when introducing interactive elements,
