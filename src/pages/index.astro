@@ -2,9 +2,20 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Projects from '../components/Projects.astro';
+import About from '../components/About.astro';
 ---
 
 <Layout title="Anuar Jimenez">
   <Hero />
   <Projects />
+  <div class="about-skills-layout">
+    <About />
+  </div>
 </Layout>
+
+<style>
+  .about-skills-layout {
+    display: grid;
+    min-width: 0;
+  }
+</style>

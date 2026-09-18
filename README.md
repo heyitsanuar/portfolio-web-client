@@ -171,3 +171,15 @@ to immediate movement when reduced motion is requested.
 From `md`, the same list and `ProjectCard` instances return to the two-column
 grid. No cards or project data are duplicated, and no carousel dependency or
 framework hydration is used.
+
+## About
+
+`About.astro` follows Projects as the `#about` navigation target. It contains the
+approved headline and four lightweight trait cards without adding unverified
+biography. Its intrinsic card grid responds to the width available to the
+component rather than assuming a page breakpoint.
+
+The page places About inside `.about-skills-layout`. The wrapper remains a
+single-column grid in US-008 and does not reserve empty space for Skills. US-009
+can add Skills as its second child and apply the approved desktop 40/60 layout
+without changing the About component.
