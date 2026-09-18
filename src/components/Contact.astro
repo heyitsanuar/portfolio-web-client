@@ -1,0 +1,177 @@
+---
+const email = 'anuar.jimenez.io@gmail.com';
+const githubUrl = 'https://github.com/heyitsanuar';
+const linkedInUrl = 'https://www.linkedin.com/in/anuar-jimenez-io/';
+---
+
+<section id="contact" class="contact" aria-labelledby="contact-title">
+  <div class="heading-row">
+    <h2 id="contact-title">05. LET'S TALK</h2>
+    <span aria-hidden="true"></span>
+  </div>
+
+  <div class="contact-layout">
+    <div class="contact-message">
+      <h3>Have an idea in mind or a problem worth solving?</h3>
+      <p>
+        I'm always open to discussing new opportunities, interesting projects, or just having a chat
+        about tech. Tell me how I can help!
+      </p>
+    </div>
+
+    <div class="contact-actions">
+      <a class="email-action" href={`mailto:${email}`}>
+        <span>Email me</span>
+        <span class="email-address">{email}</span>
+      </a>
+
+      <ul class="social-links" aria-label="Social profiles">
+        <li>
+          <a href={githubUrl}>
+            <span>GitHub</span>
+            <span class="account-name">heyitsanuar</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href={linkedInUrl}>
+            <span>LinkedIn</span>
+            <span class="account-name">anuar-jimenez-io</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .contact,
+  .contact-layout,
+  .contact-message,
+  .contact-actions,
+  .email-action,
+  .social-links,
+  .social-links a {
+    min-width: 0;
+  }
+
+  .heading-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 4);
+  }
+
+  h2 {
+    flex: none;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-label);
+  }
+
+  .heading-row > span {
+    width: min(12rem, 35vw);
+    height: 1px;
+    background: var(--color-border-subtle);
+  }
+
+  .contact-layout {
+    display: grid;
+    gap: calc(var(--spacing) * 12);
+    margin-top: calc(var(--spacing) * 8);
+  }
+
+  h3 {
+    max-width: 42rem;
+    overflow-wrap: anywhere;
+    color: var(--color-primary);
+    font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.2;
+  }
+
+  .contact-message > p {
+    max-width: 42rem;
+    margin-top: calc(var(--spacing) * 6);
+    color: var(--color-secondary);
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+  }
+
+  .contact-actions {
+    display: grid;
+    gap: calc(var(--spacing) * 6);
+  }
+
+  .email-action {
+    display: grid;
+    align-content: center;
+    gap: var(--spacing);
+    min-height: calc(var(--spacing) * 11);
+    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 5);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-small);
+    background: var(--color-accent);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .email-action:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .email-action:active {
+    background: var(--color-primary);
+  }
+
+  .email-address {
+    overflow-wrap: anywhere;
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .social-links {
+    display: grid;
+  }
+
+  .social-links a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    min-height: calc(var(--spacing) * 11);
+    padding-block: calc(var(--spacing) * 2);
+    color: var(--color-primary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .social-links a:hover {
+    color: var(--color-accent-hover);
+    border-color: var(--color-accent);
+  }
+
+  .social-links a:active {
+    color: var(--color-accent);
+  }
+
+  .account-name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--color-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    text-align: right;
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    .contact-layout {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      align-items: end;
+      gap: calc(var(--spacing) * 16);
+    }
+  }
+</style>
