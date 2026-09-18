@@ -1,0 +1,73 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { projects } from '../data/projects';
+---
+
+<section id="projects" class="projects" aria-labelledby="projects-title">
+  <header class="projects-heading">
+    <div class="heading-row">
+      <h2 id="projects-title">01. PROJECTS</h2>
+      <span aria-hidden="true"></span>
+    </div>
+    <p>Things I've built, explored, and learned from.</p>
+  </header>
+
+  <ul class="project-grid">
+    {projects.map((project, index) => (
+      <li><ProjectCard project={project} number={index + 1} /></li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .projects {
+    min-width: 0;
+  }
+
+  .projects-heading {
+    max-width: 42rem;
+  }
+
+  .heading-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 4);
+  }
+
+  h2 {
+    flex: none;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-label);
+  }
+
+  .heading-row span {
+    width: min(12rem, 35vw);
+    height: 1px;
+    background: var(--color-border-subtle);
+  }
+
+  .projects-heading p {
+    margin-top: calc(var(--spacing) * 4);
+    color: var(--color-primary);
+    font-size: var(--text-section);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-section--line-height);
+  }
+
+  .project-grid {
+    display: grid;
+    gap: calc(var(--spacing) * 6);
+    margin-top: calc(var(--spacing) * 12);
+  }
+
+  @media (width >= theme(--breakpoint-md)) {
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

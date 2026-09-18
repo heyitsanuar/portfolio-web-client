@@ -152,3 +152,15 @@ The terminal frame is decorative and noninteractive. Its shell establishes the
 Hero composition without adding terminal identity, introduction output, typing
 animation, commands, timers, observers, or client-side code. Those concerns
 remain reserved for US-013, US-014, and US-015.
+
+## Projects
+
+`Projects.astro` follows the Hero as the `#projects` navigation target and uses
+the application shell's existing container and section rhythm. Project records
+live in `src/data/projects.ts`, and `ProjectCard.astro` renders the repeated card
+structure. The initial four records are explicitly marked mock content and do
+not include demo or repository URLs; replace them with verified project data.
+
+Projects form a normal single-column list on mobile and a two-column grid from
+`md`. Horizontal scrolling, Scroll Snap, carousel controls, position indicators,
+and carousel JavaScript remain reserved for US-007.
