@@ -1,0 +1,142 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  number: number;
+}
+
+const { project, number } = Astro.props;
+const hasActions = Boolean(project.demoUrl || project.repositoryUrl);
+const projectNumber = String(number).padStart(2, '0');
+---
+
+<article class="project-card">
+  <div class="project-preview" aria-hidden="true">
+    <span>Concept preview</span>
+    <strong>{projectNumber}</strong>
+  </div>
+
+  <div class="project-content">
+    {project.isPlaceholder && <p class="project-status">Mock project</p>}
+    <h3>{project.title}</h3>
+    <p class="project-description">{project.description}</p>
+
+    <ul class="technology-list" aria-label={`Technologies represented in ${project.title}`}>
+      {project.technologies.map((technology) => <li>{technology}</li>)}
+    </ul>
+
+    {hasActions && (
+      <ul class="project-actions" aria-label={`${project.title} links`}>
+        {project.demoUrl && (
+          <li><a href={project.demoUrl} aria-label={`View demo for ${project.title}`}>Demo <span aria-hidden="true">↗</span></a></li>
+        )}
+        {project.repositoryUrl && (
+          <li><a href={project.repositoryUrl} aria-label={`View repository for ${project.title}`}>Repository <span aria-hidden="true">↗</span></a></li>
+        )}
+      </ul>
+    )}
+  </div>
+</article>
+
+<style>
+  @reference "../styles/global.css";
+
+  .project-card {
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface);
+  }
+
+  .project-preview {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    aspect-ratio: 16 / 10;
+    padding: calc(var(--spacing) * 6);
+    color: var(--color-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-elevated);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .project-preview strong {
+    color: var(--color-border-subtle);
+    font-size: var(--text-display);
+    line-height: 1;
+  }
+
+  .project-content {
+    display: flex;
+    min-height: 18rem;
+    flex-direction: column;
+    padding: calc(var(--spacing) * 6);
+  }
+
+  .project-status {
+    margin-bottom: calc(var(--spacing) * 3);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  h3 {
+    color: var(--color-primary);
+    font-size: var(--text-section);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-section--line-height);
+  }
+
+  .project-description {
+    margin-top: calc(var(--spacing) * 4);
+    color: var(--color-secondary);
+  }
+
+  .technology-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing) * 2);
+    margin-top: auto;
+    padding-top: calc(var(--spacing) * 6);
+  }
+
+  .technology-list li {
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 3);
+    color: var(--color-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-small);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing) * 3);
+    margin-top: calc(var(--spacing) * 6);
+  }
+
+  .project-actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: calc(var(--spacing) * 11);
+    gap: calc(var(--spacing) * 2);
+    color: var(--color-primary);
+    border-radius: var(--radius-small);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .project-actions a:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .project-actions a:active {
+    color: var(--color-accent);
+  }
+</style>
