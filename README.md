@@ -118,3 +118,23 @@ Base styles set the dark page theme and a purple `:focus-visible` outline (2px
 wide, 4px offset). Preserve this indicator when introducing interactive elements,
 and validate it against their actual surfaces. Future motion must respect
 `prefers-reduced-motion`; this foundation introduces none.
+
+## Navigation
+
+`Navigation.astro` renders a normal-flow horizontal top toolbar from the single
+ordered list in `src/data/navigation.ts`. Below the inherited `lg` breakpoint,
+JavaScript enhances the wrapping link list into a compact Menu button and native
+modal dialog. Without JavaScript, the ordinary links remain visible. Both the
+header and dialog content reuse `.content-container`; the main shell is unchanged.
+
+Anchor contracts are `#home`, `#projects`, `#about`, `#skills`, `#experience`, and
+`#contact`. Only Home currently exists. All entries remain normal links; missing
+section targets intentionally have no scrolling destination until their stories
+are implemented. No placeholder targets or availability flags are used.
+
+The mobile dialog supports Close and Escape, confines modal focus, locks page
+scrolling, and restores it on dismissal. Selecting an existing destination moves
+focus there; otherwise focus returns to Menu. Resizing to desktop closes the
+modal and returns focus to the visible name link. Current-link styling follows
+valid URL fragments, not scrolling. Smooth scrolling is disabled for reduced
+motion. There are no sticky headers, scroll spies, or menu animations.
