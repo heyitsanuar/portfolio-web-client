@@ -3,7 +3,7 @@ import ProjectCard from './ProjectCard.astro';
 import { projects } from '../data/projects';
 ---
 
-<section id="projects" class="projects" aria-labelledby="projects-title">
+<section id="projects" class="projects" aria-labelledby="projects-title" data-project-carousel>
   <header class="projects-heading">
     <div class="heading-row">
       <h2 id="projects-title">01. PROJECTS</h2>
@@ -12,11 +12,25 @@ import { projects } from '../data/projects';
     <p>Things I've built, explored, and learned from.</p>
   </header>
 
-  <ul class="project-grid">
+  <ul id="projects-track" class="project-grid" tabindex="0" aria-label="Projects" data-carousel-track>
     {projects.map((project, index) => (
-      <li><ProjectCard project={project} number={index + 1} /></li>
+      <li data-carousel-item><ProjectCard project={project} number={index + 1} /></li>
     ))}
   </ul>
+
+  <div class="carousel-controls" data-carousel-controls>
+    <span class="carousel-status" aria-live="polite" aria-atomic="true" data-carousel-status>
+      01 / {String(projects.length).padStart(2, '0')}
+    </span>
+    <div class="carousel-buttons">
+      <button type="button" aria-label="Previous project" aria-controls="projects-track" aria-disabled="true" data-carousel-previous>
+        <span aria-hidden="true">←</span>
+      </button>
+      <button type="button" aria-label="Next project" aria-controls="projects-track" data-carousel-next>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
 </section>
 
 <style>
@@ -61,13 +75,170 @@ import { projects } from '../data/projects';
 
   .project-grid {
     display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
     gap: calc(var(--spacing) * 6);
     margin-top: calc(var(--spacing) * 12);
+    padding-inline-end: calc(var(--spacing) * 12);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: none;
+  }
+
+  .project-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-grid > li {
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  .carousel-controls {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--spacing) * 4);
+    margin-top: calc(var(--spacing) * 6);
+  }
+
+  .projects[data-carousel-enhanced] .carousel-controls {
+    display: flex;
+  }
+
+  .carousel-status {
+    color: var(--color-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .carousel-buttons {
+    display: flex;
+    gap: calc(var(--spacing) * 3);
+  }
+
+  .carousel-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--spacing) * 11);
+    height: calc(var(--spacing) * 11);
+    color: var(--color-primary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+    cursor: pointer;
+  }
+
+  .carousel-buttons button:hover:not([aria-disabled='true']) {
+    color: var(--color-accent-hover);
+    border-color: var(--color-accent);
+  }
+
+  .carousel-buttons button:active:not([aria-disabled='true']) {
+    background: var(--color-surface-elevated);
+  }
+
+  .carousel-buttons button[aria-disabled='true'] {
+    color: var(--color-secondary);
+    cursor: not-allowed;
+    opacity: 0.45;
   }
 
   @media (width >= theme(--breakpoint-md)) {
     .project-grid {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-inline-end: 0;
+      overflow-x: visible;
+      overscroll-behavior-inline: auto;
+      scroll-snap-type: none;
+    }
+
+    .projects[data-carousel-enhanced] .carousel-controls {
+      display: none;
     }
   }
 </style>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>('[data-project-carousel]');
+  const track = carousel?.querySelector<HTMLElement>('[data-carousel-track]');
+  const items = track ? Array.from(track.querySelectorAll<HTMLElement>('[data-carousel-item]')) : [];
+  const previous = carousel?.querySelector<HTMLButtonElement>('[data-carousel-previous]');
+  const next = carousel?.querySelector<HTMLButtonElement>('[data-carousel-next]');
+  const status = carousel?.querySelector<HTMLElement>('[data-carousel-status]');
+
+  if (carousel && track && items.length && previous && next && status) {
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const total = String(items.length).padStart(2, '0');
+    let activeIndex = 0;
+    let scrollFrame = 0;
+    let resizeFrame = 0;
+
+    const isScrollable = () => track.scrollWidth > track.clientWidth + 1;
+    const itemLeft = (item: HTMLElement) =>
+      track.scrollLeft + item.getBoundingClientRect().left - track.getBoundingClientRect().left;
+
+    const updateControls = () => {
+      status.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${total}`;
+      previous.setAttribute('aria-disabled', String(activeIndex === 0));
+      next.setAttribute('aria-disabled', String(activeIndex === items.length - 1));
+    };
+
+    const updateActiveItem = () => {
+      const trackLeft = track.getBoundingClientRect().left;
+      activeIndex = items.reduce((closest, item, index) => {
+        const distance = Math.abs(item.getBoundingClientRect().left - trackLeft);
+        const closestDistance = Math.abs(items[closest].getBoundingClientRect().left - trackLeft);
+        return distance < closestDistance ? index : closest;
+      }, 0);
+      updateControls();
+    };
+
+    const scrollToItem = (index: number, behavior: ScrollBehavior) => {
+      const targetIndex = Math.max(0, Math.min(index, items.length - 1));
+      track.scrollTo({ left: itemLeft(items[targetIndex]), behavior });
+    };
+
+    const move = (direction: -1 | 1) => {
+      activeIndex = Math.max(0, Math.min(activeIndex + direction, items.length - 1));
+      updateControls();
+      scrollToItem(activeIndex, reducedMotion.matches ? 'auto' : 'smooth');
+    };
+
+    const synchronizeLayout = () => {
+      const scrollable = isScrollable();
+      track.tabIndex = scrollable ? 0 : -1;
+      track.setAttribute('aria-label', scrollable ? 'Project carousel' : 'Projects');
+      if (scrollable) scrollToItem(activeIndex, 'auto');
+      else track.scrollLeft = 0;
+      updateControls();
+    };
+
+    previous.addEventListener('click', () => {
+      if (activeIndex > 0) move(-1);
+    });
+    next.addEventListener('click', () => {
+      if (activeIndex < items.length - 1) move(1);
+    });
+    track.addEventListener('keydown', (event) => {
+      if (!isScrollable() || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
+      event.preventDefault();
+      move(event.key === 'ArrowLeft' ? -1 : 1);
+    });
+    track.addEventListener('scroll', () => {
+      cancelAnimationFrame(scrollFrame);
+      scrollFrame = requestAnimationFrame(updateActiveItem);
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(synchronizeLayout);
+    });
+
+    carousel.dataset.carouselEnhanced = '';
+    synchronizeLayout();
+  }
+</script>

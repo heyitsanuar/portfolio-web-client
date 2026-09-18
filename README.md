@@ -161,6 +161,13 @@ live in `src/data/projects.ts`, and `ProjectCard.astro` renders the repeated car
 structure. The initial four records are explicitly marked mock content and do
 not include demo or repository URLs; replace them with verified project data.
 
-Projects form a normal single-column list on mobile and a two-column grid from
-`md`. Horizontal scrolling, Scroll Snap, carousel controls, position indicators,
-and carousel JavaScript remain reserved for US-007.
+Below `md`, the project list becomes a native horizontal carousel with CSS Scroll
+Snap, one complete card plus a preview of the next, non-looping controls, and a
+position indicator. Swipe and native scrolling work without JavaScript. A small
+vanilla TypeScript enhancement synchronizes the controls and indicator, supports
+Left/Right keys while the track is focused, and switches programmatic scrolling
+to immediate movement when reduced motion is requested.
+
+From `md`, the same list and `ProjectCard` instances return to the two-column
+grid. No cards or project data are duplicated, and no carousel dependency or
+framework hydration is used.
