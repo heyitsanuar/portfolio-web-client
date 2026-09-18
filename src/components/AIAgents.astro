@@ -1,0 +1,103 @@
+<section id="ai-agents" class="ai-agents" aria-labelledby="ai-agents-title">
+  <div class="capability-panel">
+    <header>
+      <h2 id="ai-agents-title">AI &amp; Agents</h2>
+      <p>
+        Using AI-assisted and agentic workflows to accelerate development, exploration, debugging,
+        and delivery.
+      </p>
+    </header>
+
+    <ul aria-label="AI and agent capabilities">
+      <li>Prompt Engineering</li>
+      <li>Agentic Workflows</li>
+      <li>AI-assisted Development</li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .ai-agents {
+    min-width: 0;
+  }
+
+  .capability-panel {
+    display: grid;
+    gap: calc(var(--spacing) * 10);
+    min-width: 0;
+    padding: calc(var(--spacing) * 6);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 28%, var(--color-border-subtle));
+    border-inline-start-width: 3px;
+    border-radius: var(--radius-medium);
+    background: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface));
+  }
+
+  header,
+  ul,
+  li {
+    min-width: 0;
+  }
+
+  h2 {
+    color: var(--color-primary);
+    font-size: var(--text-section);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-section--line-height);
+  }
+
+  header > p {
+    max-width: 40rem;
+    margin-top: calc(var(--spacing) * 4);
+    color: var(--color-secondary);
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+    gap: calc(var(--spacing) * 6);
+  }
+
+  li {
+    position: relative;
+    padding-top: calc(var(--spacing) * 4);
+    padding-inline-start: calc(var(--spacing) * 4);
+    overflow-wrap: anywhere;
+    color: var(--color-primary);
+    border-top: 1px solid var(--color-border-subtle);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  li::before {
+    position: absolute;
+    top: calc(var(--spacing) * 5);
+    left: 0;
+    width: calc(var(--spacing) * 1.5);
+    height: calc(var(--spacing) * 1.5);
+    border-radius: 50%;
+    background: var(--color-accent);
+    content: '';
+  }
+
+  @media (width >= theme(--breakpoint-md)) {
+    .capability-panel {
+      padding: calc(var(--spacing) * 8);
+    }
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    .capability-panel {
+      grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+      align-items: center;
+      gap: calc(var(--spacing) * 12);
+      padding: calc(var(--spacing) * 10);
+    }
+
+    ul {
+      gap: calc(var(--spacing) * 4);
+    }
+  }
+</style>

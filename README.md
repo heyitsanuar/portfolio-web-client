@@ -194,3 +194,11 @@ Technology icons are local SVG assets from Simple Icons (CC0 1.0) and Devicon
 (MIT), documented in `src/assets/skills/README.md`. ChatGPT uses a neutral generic
 chat glyph because neither source provided a matching asset. Icons are decorative
 and every technology retains a visible text label.
+
+## AI & Agents
+
+`AIAgents.astro` follows the About + Skills composition as a full-width static
+capability panel. It uses the approved explanatory copy and three capability
+labels without repeating the AI tool inventory from Skills. A subtle accent-mixed
+border, narrow purple edge, and lightly tinted surface distinguish it without
+glow, gradients, motion, or client-side JavaScript.
