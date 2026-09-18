@@ -180,6 +180,17 @@ biography. Its intrinsic card grid responds to the width available to the
 component rather than assuming a page breakpoint.
 
 The page places About inside `.about-skills-layout`. The wrapper remains a
-single-column grid in US-008 and does not reserve empty space for Skills. US-009
-can add Skills as its second child and apply the approved desktop 40/60 layout
-without changing the About component.
+single-column grid below `lg`. At `lg`, About and Skills share the same horizontal
+area with an approximate 40/60 split.
+
+## Skills
+
+`Skills.astro` renders the verified technology dataset as six static semantic
+groups. All groups and technologies remain visible without JavaScript. A small
+vanilla TypeScript enhancement reveals the seven required category controls and
+filters the existing groups; it does not duplicate technology markup.
+
+Technology icons are local SVG assets from Simple Icons (CC0 1.0) and Devicon
+(MIT), documented in `src/assets/skills/README.md`. ChatGPT uses a neutral generic
+chat glyph because neither source provided a matching asset. Icons are decorative
+and every technology retains a visible text label.

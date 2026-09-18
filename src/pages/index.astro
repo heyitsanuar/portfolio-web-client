@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Projects from '../components/Projects.astro';
 import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
 ---
 
 <Layout title="Anuar Jimenez">
@@ -10,12 +11,24 @@ import About from '../components/About.astro';
   <Projects />
   <div class="about-skills-layout">
     <About />
+    <Skills />
   </div>
 </Layout>
 
 <style>
+  @reference "../styles/global.css";
+
   .about-skills-layout {
     display: grid;
+    gap: var(--section-gap);
     min-width: 0;
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    .about-skills-layout {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      align-items: start;
+      gap: calc(var(--spacing) * 12);
+    }
   }
 </style>

@@ -1,0 +1,81 @@
+---
+import javascript from '../assets/skills/javascript.svg';
+import typescript from '../assets/skills/typescript.svg';
+import react from '../assets/skills/react.svg';
+import redux from '../assets/skills/redux.svg';
+import vuedotjs from '../assets/skills/vuedotjs.svg';
+import knockout from '../assets/skills/knockout.svg';
+import reactivex from '../assets/skills/reactivex.svg';
+import nodedotjs from '../assets/skills/nodedotjs.svg';
+import java from '../assets/skills/java.svg';
+import dotnet from '../assets/skills/dotnet.svg';
+import azure from '../assets/skills/azure.svg';
+import jenkins from '../assets/skills/jenkins.svg';
+import claude from '../assets/skills/claude.svg';
+import githubcopilot from '../assets/skills/githubcopilot.svg';
+import cursor from '../assets/skills/cursor.svg';
+import modelcontextprotocol from '../assets/skills/modelcontextprotocol.svg';
+import jest from '../assets/skills/jest.svg';
+import testinglibrary from '../assets/skills/testinglibrary.svg';
+import selenium from '../assets/skills/selenium.svg';
+import gradle from '../assets/skills/gradle.svg';
+import type { SkillIconName } from '../data/skills';
+
+interface Props {
+  name: SkillIconName;
+}
+
+const { name } = Astro.props;
+const icons = {
+  javascript,
+  typescript,
+  react,
+  redux,
+  vuedotjs,
+  knockout,
+  reactivex,
+  nodedotjs,
+  java,
+  dotnet,
+  azure,
+  jenkins,
+  claude,
+  githubcopilot,
+  cursor,
+  modelcontextprotocol,
+  jest,
+  testinglibrary,
+  selenium,
+  gradle,
+} as const;
+---
+
+{name === 'chatgpt' ? (
+  <svg class="skill-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M5 5.75A2.75 2.75 0 0 1 7.75 3h8.5A2.75 2.75 0 0 1 19 5.75v6.5A2.75 2.75 0 0 1 16.25 15H11l-4.6 3.45A.875.875 0 0 1 5 17.75v-2.88a2.75 2.75 0 0 1-2-2.62v-6.5A2.75 2.75 0 0 1 5.75 3" />
+    <path d="M8 8h8M8 11h5" />
+  </svg>
+) : (
+  <img class="skill-icon" src={icons[name].src} alt="" aria-hidden="true" />
+)}
+
+<style>
+  .skill-icon {
+    display: block;
+    width: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 6);
+    flex: none;
+    color: var(--color-secondary);
+    filter: grayscale(1) brightness(0) invert(1);
+    opacity: 0.8;
+  }
+
+  svg.skill-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: none;
+  }
+</style>
