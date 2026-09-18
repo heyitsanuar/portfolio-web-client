@@ -48,6 +48,19 @@ const projectNumber = String(number).padStart(2, '0');
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
     background: var(--color-surface);
+    transition: border-color 250ms ease-out, background-color 250ms ease-out;
+  }
+
+  .project-card:hover,
+  .project-card:focus-within {
+    border-color: var(--color-accent);
+    background: var(--color-surface-elevated);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card {
+      transition: none;
+    }
   }
 
   .project-preview {

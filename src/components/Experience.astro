@@ -2,7 +2,7 @@
 import { experienceEntries } from '../data/experience';
 ---
 
-<section id="experience" class="experience" aria-labelledby="experience-title">
+<section id="experience" class="experience" aria-labelledby="experience-title" data-motion-reveal>
   <header class="section-header">
     <div class="heading-row">
       <h2 id="experience-title">04. EXPERIENCE</h2>
@@ -11,7 +11,7 @@ import { experienceEntries } from '../data/experience';
     <p>7+ years turning complex problems into software solutions.</p>
   </header>
 
-  <ol class="timeline">
+  <ol class="timeline" data-motion-timeline>
     {experienceEntries.map(({ company, role, startYear, endYear, responsibilities, technologies }) => (
       <li class="timeline-item">
         <article>
@@ -102,6 +102,23 @@ import { experienceEntries } from '../data/experience';
     width: 1px;
     background: var(--color-border-subtle);
     content: '';
+  }
+
+  html.motion-ready .timeline::before {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 500ms ease-out;
+  }
+
+  html.motion-ready .timeline.motion-visible::before {
+    transform: scaleY(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.motion-ready .timeline::before {
+      transform: none;
+      transition: none;
+    }
   }
 
   .timeline-item {
