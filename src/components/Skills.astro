@@ -17,7 +17,7 @@ import { skillCategories, skillGroups } from '../data/skills';
     ))}
   </div>
 
-  <div class="skill-groups" data-skill-groups>
+  <div class="skill-groups" data-skill-groups tabindex="0" aria-label="Technology skills inventory">
     {skillGroups.map(({ id, label, skills }) => (
       <section class="skill-group" data-skill-group={id} aria-labelledby={`skills-${id}`}>
         <h3 id={`skills-${id}`}>{label}</h3>
@@ -97,6 +97,22 @@ import { skillCategories, skillGroups } from '../data/skills';
   }
 
   @media (width >= theme(--breakpoint-lg)) {
+    .skills:has([data-skill-category='all'][aria-pressed='true']) .skill-groups {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(12rem, max-content);
+      grid-template-rows: minmax(0, 1fr);
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      padding-inline-end: calc(var(--spacing) * 4);
+      scrollbar-width: thin;
+      mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 2rem), transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, #000 0%, #000 calc(100% - 2rem), transparent 100%);
+    }
+
+    .skills:has([data-skill-category='all'][aria-pressed='true']) .skill-group {
+      min-width: 12rem;
+    }
+
     .category-controls {
       gap: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
       margin-top: calc(var(--spacing) * 6);
@@ -112,6 +128,10 @@ import { skillCategories, skillGroups } from '../data/skills';
     display: grid;
     gap: calc(var(--spacing) * 7);
     margin-top: calc(var(--spacing) * 9);
+  }
+
+  .skills:has([data-skill-category='all'][aria-pressed='true']) .skill-groups {
+    gap: calc(var(--spacing) * 6);
   }
 
   .skill-group {
@@ -138,12 +158,12 @@ import { skillCategories, skillGroups } from '../data/skills';
     align-items: center;
     gap: calc(var(--spacing) * 3);
     min-width: 0;
-    min-height: calc(var(--spacing) * 13);
-    padding: calc(var(--spacing) * 3);
+    min-height: calc(var(--spacing) * 11);
+    padding: calc(var(--spacing) * 2);
     color: var(--color-primary);
-    border: 1px solid var(--color-border-subtle);
+    border: 1px solid transparent;
     border-radius: var(--radius-small);
-    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+    background: transparent;
   }
 
   .skill-group li > span {
@@ -172,6 +192,14 @@ import { skillCategories, skillGroups } from '../data/skills';
   const status = skills?.querySelector<HTMLElement>('[data-skill-status]');
 
   if (skills && controls && buttons.length && groups.length && status) {
+    const inventory = skills.querySelector<HTMLElement>('[data-skill-groups]');
+    const desktopAll = matchMedia('(min-width: 64rem)');
+
+    const updateInventoryFocus = (category: string) => {
+      if (!inventory) return;
+      inventory.tabIndex = category === 'all' && desktopAll.matches ? 0 : -1;
+    };
+
     const showCategory = (category: string) => {
       let visibleCount = 0;
 
@@ -185,6 +213,7 @@ import { skillCategories, skillGroups } from '../data/skills';
       });
 
       status.textContent = `${visibleCount} ${visibleCount === 1 ? 'technology' : 'technologies'} shown.`;
+      updateInventoryFocus(category);
     };
 
     controls.addEventListener('click', (event) => {
@@ -197,5 +226,6 @@ import { skillCategories, skillGroups } from '../data/skills';
     controls.hidden = false;
     skills.dataset.enhanced = '';
     showCategory('all');
+    desktopAll.addEventListener('change', () => updateInventoryFocus(buttons.find((button) => button.getAttribute('aria-pressed') === 'true')?.dataset.skillCategory ?? 'all'));
   }
 </script>
