@@ -26,5 +26,29 @@ const { title } = Astro.props;
       </div>
     </main>
     <Footer />
+    <script>
+      const revealItems = [
+        ...document.querySelectorAll<HTMLElement>('[data-motion-reveal]'),
+        ...document.querySelectorAll<HTMLElement>('[data-motion-timeline]'),
+      ];
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (revealItems.length && !reducedMotion && 'IntersectionObserver' in window) {
+        try {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('motion-visible');
+              observer.unobserve(entry.target);
+            });
+          }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+          document.documentElement.classList.add('motion-ready');
+          revealItems.forEach((item) => observer.observe(item));
+        } catch {
+          document.documentElement.classList.remove('motion-ready');
+        }
+      }
+    </script>
   </body>
 </html>
