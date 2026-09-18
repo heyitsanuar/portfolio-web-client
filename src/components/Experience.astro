@@ -1,0 +1,210 @@
+---
+import { experienceEntries } from '../data/experience';
+---
+
+<section id="experience" class="experience" aria-labelledby="experience-title">
+  <header class="section-header">
+    <div class="heading-row">
+      <h2 id="experience-title">04. EXPERIENCE</h2>
+      <span aria-hidden="true"></span>
+    </div>
+    <p>7+ years turning complex problems into software solutions.</p>
+  </header>
+
+  <ol class="timeline">
+    {experienceEntries.map(({ company, role, startYear, endYear, responsibilities, technologies }) => (
+      <li class="timeline-item">
+        <article>
+          <header class="entry-header">
+            <div class="entry-identity">
+              <h3>{role}</h3>
+              <p>{company}</p>
+            </div>
+            <p class="date-range">
+              <time datetime={String(startYear)}>{startYear}</time>
+              <span>–</span>
+              <time datetime={String(endYear)}>{endYear}</time>
+            </p>
+          </header>
+
+          <ul class="responsibilities">
+            {responsibilities.map((responsibility) => <li>{responsibility}</li>)}
+          </ul>
+
+          <ul class="technologies" aria-label={`Technologies used at ${company}`}>
+            {technologies.map((technology) => <li>{technology}</li>)}
+          </ul>
+        </article>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .experience,
+  .timeline,
+  .timeline-item,
+  article,
+  .entry-header,
+  .entry-identity {
+    min-width: 0;
+  }
+
+  .section-header {
+    max-width: 48rem;
+  }
+
+  .heading-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 4);
+  }
+
+  h2 {
+    flex: none;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-label);
+  }
+
+  .heading-row > span {
+    width: min(12rem, 35vw);
+    height: 1px;
+    background: var(--color-border-subtle);
+  }
+
+  .section-header > p {
+    margin-top: calc(var(--spacing) * 5);
+    color: var(--color-primary);
+    font-size: var(--text-section);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-section--line-height);
+  }
+
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: calc(var(--spacing) * 12);
+    max-width: 64rem;
+    margin-top: calc(var(--spacing) * 12);
+    padding-inline-start: calc(var(--spacing) * 7);
+  }
+
+  .timeline::before {
+    position: absolute;
+    top: calc(var(--spacing) * 2);
+    bottom: calc(var(--spacing) * 2);
+    left: calc(var(--spacing) * 1.25);
+    width: 1px;
+    background: var(--color-border-subtle);
+    content: '';
+  }
+
+  .timeline-item {
+    position: relative;
+  }
+
+  .timeline-item::before {
+    position: absolute;
+    top: calc(var(--spacing) * 2);
+    left: calc(var(--spacing) * -7);
+    width: calc(var(--spacing) * 2.5);
+    height: calc(var(--spacing) * 2.5);
+    border: 2px solid var(--color-page);
+    border-radius: 50%;
+    background: var(--color-accent);
+    content: '';
+  }
+
+  .entry-header {
+    display: grid;
+    gap: calc(var(--spacing) * 2);
+  }
+
+  h3 {
+    overflow-wrap: anywhere;
+    color: var(--color-primary);
+    font-size: var(--text-lead);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-lead--line-height);
+  }
+
+  .entry-identity > p {
+    margin-top: var(--spacing);
+    color: var(--color-accent-hover);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .date-range {
+    display: flex;
+    gap: calc(var(--spacing) * 2);
+    color: var(--color-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .responsibilities {
+    display: grid;
+    gap: calc(var(--spacing) * 3);
+    margin-top: calc(var(--spacing) * 6);
+    padding-inline-start: calc(var(--spacing) * 5);
+    color: var(--color-secondary);
+    list-style: disc;
+  }
+
+  .responsibilities li {
+    padding-inline-start: var(--spacing);
+    overflow-wrap: anywhere;
+  }
+
+  .responsibilities li::marker {
+    color: var(--color-accent);
+  }
+
+  .technologies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 6);
+  }
+
+  .technologies li {
+    min-width: 0;
+    padding: calc(var(--spacing) * 0.75) calc(var(--spacing) * 1.5);
+    overflow-wrap: anywhere;
+    color: var(--color-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+    font-size: 0.8125rem;
+    line-height: var(--text-small--line-height);
+  }
+
+  @media (width >= theme(--breakpoint-md)) {
+    .timeline {
+      gap: calc(var(--spacing) * 16);
+      margin-top: calc(var(--spacing) * 16);
+      padding-inline-start: calc(var(--spacing) * 9);
+    }
+
+    .timeline::before {
+      left: calc(var(--spacing) * 1.75);
+    }
+
+    .timeline-item::before {
+      left: calc(var(--spacing) * -9);
+      width: calc(var(--spacing) * 3.5);
+      height: calc(var(--spacing) * 3.5);
+    }
+
+    .entry-header {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: calc(var(--spacing) * 8);
+    }
+  }
+</style>
