@@ -1,0 +1,168 @@
+---
+import { navigation } from '../data/navigation';
+---
+
+<header class="navigation" data-navigation>
+  <div class="content-container toolbar">
+    <a class="brand" href="#home">Anuar Jimenez</a>
+    <nav class="inline-navigation" aria-label="Primary">
+      <ul>
+        {navigation.map(({ label, href }) => (
+          <li><a href={href} aria-current={href === '#home' ? 'location' : undefined}>{label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <button class="menu-trigger" type="button" aria-haspopup="dialog" aria-controls="navigation-dialog" aria-expanded="false">Menu</button>
+  </div>
+  <dialog id="navigation-dialog" aria-label="Navigation menu">
+    <div class="content-container menu-content">
+      <div class="menu-heading">
+        <span class="font-semibold">Navigation</span>
+        <button type="button" data-close autofocus>Close</button>
+      </div>
+      <nav aria-label="Primary">
+        <ul>
+          {navigation.map(({ label, href }) => (
+            <li><a href={href} aria-current={href === '#home' ? 'location' : undefined}>{label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </dialog>
+</header>
+
+<style>
+  @reference "../styles/global.css";
+  .navigation {
+    background: var(--color-page);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .toolbar, .menu-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--spacing) * 4);
+  }
+  .toolbar { flex-wrap: wrap; padding-block: calc(var(--spacing) * 4); }
+  a, button {
+    display: inline-flex;
+    align-items: center;
+    min-height: calc(var(--spacing) * 11);
+    min-width: calc(var(--spacing) * 11);
+    color: var(--color-secondary);
+    border-radius: var(--radius-small);
+  }
+  .brand { color: var(--color-primary); font-weight: var(--font-weight-semibold); }
+  ul { display: flex; flex-wrap: wrap; gap: calc(var(--spacing) * 4); }
+  .inline-navigation { width: 100%; }
+  a:hover, a[aria-current='location'] { color: var(--color-accent); text-decoration: underline; text-underline-offset: 0.3em; }
+  a:active { color: var(--color-accent-hover); }
+  button { padding-inline: calc(var(--spacing) * 3); cursor: pointer; }
+  button:hover { color: var(--color-accent); background: var(--color-surface); }
+  button:active { background: var(--color-surface-elevated); }
+  .menu-trigger { display: none; }
+  .navigation[data-enhanced] .menu-trigger { display: inline-flex; }
+  .navigation[data-enhanced] .inline-navigation { display: none; }
+  dialog {
+    position: fixed;
+    inset: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: none;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    color: var(--color-primary);
+    background: var(--color-page);
+    border: 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  dialog::backdrop { background: color-mix(in srgb, var(--color-page) 75%, transparent); }
+  .menu-content { padding-block: calc(var(--spacing) * 4); }
+  .menu-heading { margin-bottom: calc(var(--spacing) * 4); }
+  dialog ul { flex-direction: column; gap: calc(var(--spacing) * 2); }
+  dialog a { width: 100%; }
+  @media (width >= theme(--breakpoint-lg)) {
+    .toolbar { flex-wrap: nowrap; }
+    .inline-navigation, .navigation[data-enhanced] .inline-navigation { display: block; width: auto; }
+    .navigation[data-enhanced] .menu-trigger { display: none; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-navigation]');
+  const trigger = header?.querySelector<HTMLButtonElement>('.menu-trigger');
+  const dialog = header?.querySelector<HTMLDialogElement>('dialog');
+  const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-close]');
+
+  if (header && trigger && dialog && closeButton && typeof dialog.showModal === 'function') {
+    let scrollY = 0;
+    let savedBodyStyle: string | null = null;
+    let destination: HTMLElement | null = null;
+    const updateCurrent = () => {
+      const hash = window.location.hash || '#home';
+      const exists = document.getElementById(hash.slice(1));
+      header.querySelectorAll<HTMLAnchorElement>('nav a').forEach((link) => {
+        if (exists && link.hash === hash) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    trigger.addEventListener('click', () => {
+      scrollY = window.scrollY;
+      savedBodyStyle = document.body.getAttribute('style');
+      dialog.showModal();
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.classList.add('navigation-open');
+      trigger.setAttribute('aria-expanded', 'true');
+    });
+    closeButton.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') return;
+      const lastLink = dialog.querySelector<HTMLAnchorElement>('li:last-child a');
+      if (event.shiftKey && document.activeElement === closeButton) {
+        event.preventDefault();
+        lastLink?.focus();
+      } else if (!event.shiftKey && document.activeElement === lastLink) {
+        event.preventDefault();
+        closeButton.focus();
+      }
+    });
+    dialog.addEventListener('close', () => {
+      if (savedBodyStyle === null) document.body.removeAttribute('style');
+      else document.body.setAttribute('style', savedBodyStyle);
+      window.scrollTo({ top: scrollY, behavior: 'instant' });
+      document.documentElement.classList.remove('navigation-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      const target = destination;
+      destination = null;
+      if (target) {
+        if (!target.hasAttribute('tabindex')) {
+          target.setAttribute('tabindex', '-1');
+          target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+        }
+        target.focus({ preventScroll: true });
+        target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      } else if (getComputedStyle(trigger).display !== 'none') {
+        trigger.focus({ preventScroll: true });
+      } else {
+        header.querySelector<HTMLAnchorElement>('.brand')?.focus({ preventScroll: true });
+      }
+    });
+    dialog.addEventListener('click', (event) => {
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href^="#"]') : null;
+      if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      destination = document.getElementById(link.hash.slice(1));
+      // Keep native fragment navigation and history, including future destinations.
+      dialog.close();
+    });
+    window.addEventListener('resize', () => {
+      if (dialog.open && getComputedStyle(trigger).display === 'none') dialog.close();
+    });
+    window.addEventListener('hashchange', updateCurrent);
+    updateCurrent();
+    header.dataset.enhanced = '';
+  }
+</script>
