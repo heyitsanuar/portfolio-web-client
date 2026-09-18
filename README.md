@@ -138,3 +138,17 @@ focus there; otherwise focus returns to Menu. Resizing to desktop closes the
 modal and returns focus to the visible name link. Current-link styling follows
 valid URL fragments, not scrolling. Smooth scrolling is disabled for reduced
 motion. There are no sticky headers, scroll spies, or menu animations.
+
+## Hero
+
+`Hero.astro` is the first content group inside the shared application container.
+It uses one column through tablet widths and a locally tunable two-column grid
+from `lg`: introduction on the left and a static terminal frame on the right.
+The primary Projects CTA is shown at every width; the secondary Contact CTA is
+desktop-only. Both retain their stable fragment targets before those sections
+are implemented.
+
+The terminal frame is decorative and noninteractive. Its shell establishes the
+Hero composition without adding terminal identity, introduction output, typing
+animation, commands, timers, observers, or client-side code. Those concerns
+remain reserved for US-013, US-014, and US-015.
