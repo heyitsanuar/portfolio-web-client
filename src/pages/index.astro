@@ -14,9 +14,11 @@ import Contact from '../components/Contact.astro';
   <Projects />
   <div class="about-skills-layout" data-motion-reveal>
     <About />
-    <Skills />
+    <div class="skills-column">
+      <Skills />
+      <AIAgents />
+    </div>
   </div>
-  <AIAgents />
   <Experience />
   <Contact />
 </Layout>
@@ -27,6 +29,12 @@ import Contact from '../components/Contact.astro';
   .about-skills-layout {
     display: grid;
     gap: var(--section-gap);
+    min-width: 0;
+  }
+
+  .skills-column {
+    display: grid;
+    gap: calc(var(--spacing) * 12);
     min-width: 0;
   }
 

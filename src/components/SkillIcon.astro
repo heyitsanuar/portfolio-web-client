@@ -48,6 +48,29 @@ const icons = {
   selenium,
   gradle,
 } as const;
+
+const colors = {
+  javascript: '#f7df1e',
+  typescript: '#3178c6',
+  react: '#61dafb',
+  redux: '#764abc',
+  vuedotjs: '#4fc08d',
+  knockout: '#5e9fce',
+  reactivex: '#b7178c',
+  nodedotjs: '#339933',
+  java: '#007396',
+  dotnet: '#512bd4',
+  azure: '#0078d4',
+  jenkins: '#d24939',
+  claude: '#d97757',
+  githubcopilot: '#f0f6fc',
+  cursor: '#f0f6fc',
+  modelcontextprotocol: '#5e5ce6',
+  jest: '#c21325',
+  testinglibrary: '#e33332',
+  selenium: '#43b02a',
+  gradle: '#b6c2d6',
+} as const;
 ---
 
 {name === 'chatgpt' ? (
@@ -56,7 +79,11 @@ const icons = {
     <path d="M8 8h8M8 11h5" />
   </svg>
 ) : (
-  <img class="skill-icon" src={icons[name].src} alt="" aria-hidden="true" />
+  <span
+    class="skill-icon"
+    style={`--skill-icon: url("${icons[name].src}"); --skill-color: ${colors[name]}`}
+    aria-hidden="true"
+  ></span>
 )}
 
 <style>
@@ -65,17 +92,18 @@ const icons = {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
     flex: none;
-    color: var(--color-secondary);
-    filter: grayscale(1) brightness(0) invert(1);
-    opacity: 0.8;
+    background-color: var(--skill-color, var(--color-secondary));
+    mask: var(--skill-icon) center / contain no-repeat;
+    -webkit-mask: var(--skill-icon) center / contain no-repeat;
   }
 
   svg.skill-icon {
+    background: none;
+    color: var(--color-secondary);
     fill: none;
     stroke: currentColor;
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
-    filter: none;
   }
 </style>
