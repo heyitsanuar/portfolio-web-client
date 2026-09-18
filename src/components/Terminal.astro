@@ -1,11 +1,16 @@
 <div class="terminal">
   <div class="terminal-body">
-    <p class="terminal-prompt">anuar@portfolio:~$</p>
-    <div class="terminal-profile">
-      <p>Software Engineer</p>
-      <p>Based in Mexico</p>
-      <p>Focused on modern web experiences</p>
-      <p>Focused on AI-assisted development</p>
+    <div class="terminal-static">
+      <p class="terminal-prompt">anuar@portfolio:~$</p>
+      <div class="terminal-profile">
+        <p>Software Engineer</p>
+        <p>Based in Mexico</p>
+        <p>Focused on modern web experiences</p>
+        <p>Focused on AI-assisted development</p>
+      </div>
+    </div>
+    <div class="terminal-animation" aria-hidden="true">
+      <div class="terminal-transcript"></div>
     </div>
   </div>
 </div>
@@ -23,6 +28,7 @@
   }
 
   .terminal-body {
+    position: relative;
     min-width: 0;
     padding: calc(var(--spacing) * 5);
     color: var(--color-secondary);
@@ -45,6 +51,39 @@
     overflow-wrap: anywhere;
   }
 
+  .terminal-animation {
+    display: none;
+    font: inherit;
+    white-space: pre-wrap;
+  }
+
+  .terminal-transcript {
+    overflow-wrap: anywhere;
+  }
+
+  .terminal-command {
+    --command-indent: clamp(0.5rem, 1.25ch, 1.25rem);
+    padding-inline-start: var(--command-indent);
+    text-indent: calc(-1 * var(--command-indent));
+  }
+
+  .terminal.is-animating .terminal-static,
+  .terminal.is-complete .terminal-static {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .terminal.is-animating .terminal-animation,
+  .terminal.is-complete .terminal-animation {
+    display: block;
+  }
+
   @media (width >= theme(--breakpoint-lg)) {
     .terminal {
       max-width: none;
@@ -52,3 +91,103 @@
     }
   }
 </style>
+
+<script>
+  const terminal = document.querySelector<HTMLElement>('.terminal');
+
+  if (terminal) {
+    const staticContent = terminal.querySelector<HTMLElement>('.terminal-static');
+    const animation = terminal.querySelector<HTMLElement>('.terminal-animation');
+    const transcript = terminal.querySelector<HTMLElement>('.terminal-transcript');
+    const terminalBody = terminal.querySelector<HTMLElement>('.terminal-body');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sequence = [
+      { command: 'whoami', output: ['Software Engineer'] },
+      {
+        command: 'cat about.txt',
+        output: ['Based in Mexico', 'Focused on modern web experiences', 'Focused on AI-assisted development'],
+      },
+      { command: 'ls interests/', output: [] },
+      { command: 'echo "Let\'s build something great!"', output: ["Let's build something great!"] },
+    ];
+    let hasPlayed = false;
+
+    const renderLine = (text: string, className: string) => {
+      const line = document.createElement('p');
+      line.className = className;
+      line.textContent = text;
+      transcript?.append(line);
+      return line;
+    };
+
+    const renderFinalTranscript = () => {
+      if (!transcript) return;
+      transcript.replaceChildren();
+      sequence.forEach(({ command, output }) => {
+        renderLine(`anuar@portfolio:~$ ${command}`, 'terminal-command');
+        output.forEach((line) => renderLine(line, 'terminal-output'));
+      });
+    };
+
+    const reserveTranscriptSpace = () => {
+      if (!animation || !terminalBody) return;
+      renderFinalTranscript();
+      animation.style.display = 'block';
+      animation.style.position = 'absolute';
+      animation.style.top = '0';
+      animation.style.left = '0';
+      animation.style.width = '100%';
+      animation.style.height = 'auto';
+      const height = animation.scrollHeight;
+      terminalBody.style.minHeight = `${Math.ceil(height)}px`;
+      animation.style.display = '';
+      animation.style.position = '';
+      animation.style.top = '';
+      animation.style.left = '';
+      animation.style.width = '';
+      animation.style.height = '';
+      transcript?.replaceChildren();
+    };
+
+    const typeLine = async (line: HTMLElement, text: string) => {
+      for (const character of text) {
+        line.textContent += character;
+        await new Promise((resolve) => window.setTimeout(resolve, 32));
+      }
+    };
+
+    const play = async () => {
+      if (hasPlayed || !transcript || !staticContent) return;
+      hasPlayed = true;
+      reserveTranscriptSpace();
+      terminal.classList.add('is-animating');
+
+      for (const { command, output } of sequence) {
+        const commandLine = renderLine('', 'terminal-command');
+        await typeLine(commandLine, `anuar@portfolio:~$ ${command}`);
+        await new Promise((resolve) => window.setTimeout(resolve, 180));
+        for (const line of output) {
+          renderLine(line, 'terminal-output');
+        }
+        await new Promise((resolve) => window.setTimeout(resolve, 220));
+      }
+
+      terminal.classList.remove('is-animating');
+      terminal.classList.add('is-complete');
+    };
+
+    if (reducedMotion.matches) {
+      reserveTranscriptSpace();
+      renderFinalTranscript();
+      terminal.classList.add('is-complete');
+    } else {
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          void play();
+        }
+      }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+      observer.observe(terminal);
+    }
+  }
+</script>
