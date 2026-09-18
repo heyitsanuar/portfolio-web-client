@@ -36,6 +36,19 @@ The build command does not perform type checking. There is no automated test
 suite yet; the foundation is verified with type checks, a build, and browser
 smoke checks.
 
+## GitHub Pages deployment
+
+The site is a static Astro build configured for the `portfolio-web-client`
+GitHub Pages project site. The expected production URL is:
+
+`https://heyitsanuar.github.io/portfolio-web-client/`
+
+Pushes to `main` deploy through GitHub Actions. In the repository settings,
+set GitHub Pages to use **GitHub Actions** as its source. The workflow lives at
+`.github/workflows/deploy.yml` and runs `npm ci`, `npm run check`, and
+`npm run build` before uploading the `dist/` artifact. There is currently no
+automated test script.
+
 ## Source structure
 
 - `src/components/` — reusable components (initially empty)
