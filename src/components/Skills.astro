@@ -110,8 +110,8 @@ import { skillCategories, skillGroups } from '../data/skills';
 
   .skill-groups {
     display: grid;
-    gap: calc(var(--spacing) * 8);
-    margin-top: calc(var(--spacing) * 10);
+    gap: calc(var(--spacing) * 7);
+    margin-top: calc(var(--spacing) * 9);
   }
 
   .skill-group {
@@ -129,8 +129,8 @@ import { skillCategories, skillGroups } from '../data/skills';
   .skill-group ul {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
-    gap: calc(var(--spacing) * 3);
-    margin-top: calc(var(--spacing) * 4);
+    gap: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 3);
   }
 
   .skill-group li {
@@ -138,12 +138,12 @@ import { skillCategories, skillGroups } from '../data/skills';
     align-items: center;
     gap: calc(var(--spacing) * 3);
     min-width: 0;
-    min-height: calc(var(--spacing) * 14);
-    padding: calc(var(--spacing) * 4);
+    min-height: calc(var(--spacing) * 13);
+    padding: calc(var(--spacing) * 3);
     color: var(--color-primary);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-small);
-    background: var(--color-surface);
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
   }
 
   .skill-group li > span {
