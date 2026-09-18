@@ -12,6 +12,14 @@
     <div class="terminal-animation" aria-hidden="true">
       <div class="terminal-transcript"></div>
     </div>
+    <div class="terminal-interactive" hidden>
+      <div class="terminal-history"></div>
+      <form class="terminal-form">
+        <label class="terminal-label" for="terminal-command">Terminal command</label>
+        <span class="terminal-input-prompt" aria-hidden="true">anuar@portfolio:~$</span>
+        <input id="terminal-command" name="command" type="text" autocomplete="off" spellcheck="false" />
+      </form>
+    </div>
   </div>
 </div>
 
@@ -84,6 +92,67 @@
     display: block;
   }
 
+  .terminal-interactive {
+    margin-top: calc(var(--spacing) * 4);
+  }
+
+  .terminal-history {
+    overflow-wrap: anywhere;
+  }
+
+  .terminal-history p {
+    margin: 0;
+  }
+
+  .terminal-history p + p {
+    margin-top: calc(var(--spacing) * 1.5);
+  }
+
+  .terminal-history .terminal-command,
+  .terminal-history .terminal-output {
+    margin-top: calc(var(--spacing) * 2);
+  }
+
+  .terminal-form {
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+    margin-top: calc(var(--spacing) * 3);
+    border-bottom: 2px solid transparent;
+  }
+
+  .terminal-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .terminal-input-prompt {
+    flex: 0 0 auto;
+    color: var(--color-terminal);
+  }
+
+  .terminal-form input {
+    min-width: 0;
+    width: 100%;
+    min-height: calc(var(--spacing) * 11);
+    padding: 0;
+    border: 0;
+    outline: 0;
+    color: var(--color-primary);
+    background: transparent;
+    font: inherit;
+  }
+
+  .terminal-form:focus-within {
+    border-bottom-color: var(--focus-color);
+  }
+
   @media (width >= theme(--breakpoint-lg)) {
     .terminal {
       max-width: none;
@@ -100,6 +169,10 @@
     const animation = terminal.querySelector<HTMLElement>('.terminal-animation');
     const transcript = terminal.querySelector<HTMLElement>('.terminal-transcript');
     const terminalBody = terminal.querySelector<HTMLElement>('.terminal-body');
+    const interactive = terminal.querySelector<HTMLElement>('.terminal-interactive');
+    const form = terminal.querySelector<HTMLFormElement>('.terminal-form');
+    const input = terminal.querySelector<HTMLInputElement>('#terminal-command');
+    const history = terminal.querySelector<HTMLElement>('.terminal-history');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sequence = [
       { command: 'whoami', output: ['Software Engineer'] },
@@ -111,6 +184,17 @@
       { command: 'echo "Let\'s build something great!"', output: ["Let's build something great!"] },
     ];
     let hasPlayed = false;
+
+    const commands = new Map<string, { target?: string; output?: string[] }>([
+      ['help', { output: ['help', 'about', 'skills', 'experience', 'projects', 'contact', 'clear'] }],
+      ['about', { target: '#about' }],
+      ['skills', { target: '#skills' }],
+      ['experience', { target: '#experience' }],
+      ['projects', { target: '#projects' }],
+      ['contact', { target: '#contact' }],
+      ['clear', {}],
+      ['sudo hire anuar', { target: '#contact', output: ['Permission granted. Opening contact section...'] }],
+    ]);
 
     const renderLine = (text: string, className: string) => {
       const line = document.createElement('p');
@@ -156,6 +240,51 @@
       }
     };
 
+    const showInteractivePrompt = () => {
+      if (!interactive) return;
+      interactive.hidden = false;
+    };
+
+    const appendHistoryLine = (text: string, className: string, target?: HTMLElement | null) => {
+      target ??= history;
+      if (!target) return;
+      const line = document.createElement('p');
+      line.className = className;
+      line.textContent = text;
+      target.append(line);
+    };
+
+    const navigateTo = (target: string) => {
+      window.location.hash = target;
+    };
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!input || !history) return;
+      const submitted = input.value.trim();
+      input.value = '';
+      if (!submitted) return;
+
+      appendHistoryLine(`anuar@portfolio:~$ ${submitted}`, 'terminal-command');
+
+      if (submitted === 'clear') {
+        history.replaceChildren();
+        input.focus();
+        return;
+      }
+
+      const command = commands.get(submitted);
+      if (!command) {
+        appendHistoryLine('Command not found. Type "help" to see available commands.', 'terminal-output');
+        input.focus();
+        return;
+      }
+
+      command.output?.forEach((line) => appendHistoryLine(line, 'terminal-output'));
+      if (command.target) navigateTo(command.target);
+      input.focus();
+    });
+
     const play = async () => {
       if (hasPlayed || !transcript || !staticContent) return;
       hasPlayed = true;
@@ -174,12 +303,14 @@
 
       terminal.classList.remove('is-animating');
       terminal.classList.add('is-complete');
+      showInteractivePrompt();
     };
 
     if (reducedMotion.matches) {
       reserveTranscriptSpace();
       renderFinalTranscript();
       terminal.classList.add('is-complete');
+      showInteractivePrompt();
     } else {
       const observer = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) {
