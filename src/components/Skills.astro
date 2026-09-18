@@ -1,0 +1,201 @@
+---
+import SkillIcon from './SkillIcon.astro';
+import { skillCategories, skillGroups } from '../data/skills';
+---
+
+<section id="skills" class="skills" aria-labelledby="skills-title" data-skills>
+  <div class="heading-row">
+    <h2 id="skills-title">03. SKILLS</h2>
+    <span aria-hidden="true"></span>
+  </div>
+
+  <div class="category-controls" aria-label="Skill categories" data-skill-controls hidden>
+    {skillCategories.map(({ id, label }) => (
+      <button type="button" data-skill-category={id} aria-pressed={id === 'all' ? 'true' : 'false'}>
+        {label}
+      </button>
+    ))}
+  </div>
+
+  <div class="skill-groups" data-skill-groups>
+    {skillGroups.map(({ id, label, skills }) => (
+      <section class="skill-group" data-skill-group={id} aria-labelledby={`skills-${id}`}>
+        <h3 id={`skills-${id}`}>{label}</h3>
+        <ul>
+          {skills.map(({ name, icon }) => (
+            <li>
+              <SkillIcon name={icon} />
+              <span>{name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <p class="filter-status" data-skill-status aria-live="polite"></p>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .skills {
+    min-width: 0;
+  }
+
+  .heading-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 4);
+  }
+
+  h2 {
+    flex: none;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-label);
+  }
+
+  .heading-row > span {
+    width: min(12rem, 35vw);
+    height: 1px;
+    background: var(--color-border-subtle);
+  }
+
+  .category-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing);
+    margin-top: calc(var(--spacing) * 5);
+  }
+
+  .category-controls button {
+    min-width: calc(var(--spacing) * 11);
+    min-height: calc(var(--spacing) * 11);
+    padding-inline: calc(var(--spacing) * 2);
+    color: var(--color-secondary);
+    border-bottom: 1px solid transparent;
+    border-radius: var(--radius-small);
+    font-size: var(--text-small);
+    cursor: pointer;
+  }
+
+  .category-controls button:hover {
+    color: var(--color-primary);
+    background: var(--color-surface);
+  }
+
+  .category-controls button:active {
+    color: var(--color-accent-hover);
+  }
+
+  .category-controls button[aria-pressed='true'] {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    .category-controls {
+      gap: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+      margin-top: calc(var(--spacing) * 6);
+    }
+
+    .category-controls button {
+      padding-inline: calc(var(--spacing) * 3);
+      font-size: var(--text-body);
+    }
+  }
+
+  .skill-groups {
+    display: grid;
+    gap: calc(var(--spacing) * 8);
+    margin-top: calc(var(--spacing) * 10);
+  }
+
+  .skill-group {
+    min-width: 0;
+  }
+
+  .skill-group h3 {
+    color: var(--color-primary);
+    font-size: var(--text-small);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .skill-group ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    gap: calc(var(--spacing) * 3);
+    margin-top: calc(var(--spacing) * 4);
+  }
+
+  .skill-group li {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    min-width: 0;
+    min-height: calc(var(--spacing) * 14);
+    padding: calc(var(--spacing) * 4);
+    color: var(--color-primary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+  }
+
+  .skill-group li > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .filter-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+  const skills = document.querySelector<HTMLElement>('[data-skills]');
+  const controls = skills?.querySelector<HTMLElement>('[data-skill-controls]');
+  const buttons = controls ? Array.from(controls.querySelectorAll<HTMLButtonElement>('[data-skill-category]')) : [];
+  const groups = skills ? Array.from(skills.querySelectorAll<HTMLElement>('[data-skill-group]')) : [];
+  const status = skills?.querySelector<HTMLElement>('[data-skill-status]');
+
+  if (skills && controls && buttons.length && groups.length && status) {
+    const showCategory = (category: string) => {
+      let visibleCount = 0;
+
+      buttons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.skillCategory === category));
+      });
+      groups.forEach((group) => {
+        const visible = category === 'all' || group.dataset.skillGroup === category;
+        group.hidden = !visible;
+        if (visible) visibleCount += group.querySelectorAll('li').length;
+      });
+
+      status.textContent = `${visibleCount} ${visibleCount === 1 ? 'technology' : 'technologies'} shown.`;
+    };
+
+    controls.addEventListener('click', (event) => {
+      const button = event.target instanceof Element
+        ? event.target.closest<HTMLButtonElement>('[data-skill-category]')
+        : null;
+      if (button?.dataset.skillCategory) showCategory(button.dataset.skillCategory);
+    });
+
+    controls.hidden = false;
+    skills.dataset.enhanced = '';
+    showCategory('all');
+  }
+</script>
