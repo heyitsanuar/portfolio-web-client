@@ -1,17 +1,43 @@
+---
+import SkillIcon from './SkillIcon.astro';
+
+const tools = [
+  { name: 'Claude Code', icon: 'claude' },
+  { name: 'ChatGPT', icon: 'chatgpt' },
+  { name: 'GitHub Copilot', icon: 'githubcopilot' },
+  { name: 'Cursor', icon: 'cursor' },
+  { name: 'MCP', icon: 'modelcontextprotocol' },
+] as const;
+
+const capabilities = ['Prompt Engineering', 'Agentic Workflows', 'AI-assisted Development'];
+---
+
 <section id="ai-agents" class="ai-agents" aria-labelledby="ai-agents-title" data-motion-reveal>
   <div class="capability-panel">
     <header>
-      <h2 id="ai-agents-title">AI &amp; Agents</h2>
-      <p>
-        Using AI-assisted and agentic workflows to accelerate development, exploration, debugging,
-        and delivery.
-      </p>
+      <div class="panel-heading">
+        <svg class="ai-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M5 5.75A2.75 2.75 0 0 1 7.75 3h8.5A2.75 2.75 0 0 1 19 5.75v6.5A2.75 2.75 0 0 1 16.25 15H11l-4.6 3.45A.875.875 0 0 1 5 17.75v-2.88a2.75 2.75 0 0 1-2-2.62v-6.5A2.75 2.75 0 0 1 5.75 3" />
+          <path d="M8 8h8M8 11h5" />
+        </svg>
+        <h2 id="ai-agents-title">AI &amp; Agents</h2>
+        <span class="featured-badge">Featured</span>
+      </div>
     </header>
 
-    <ul aria-label="AI and agent capabilities">
-      <li>Prompt Engineering</li>
-      <li>Agentic Workflows</li>
-      <li>AI-assisted Development</li>
+    <p class="panel-description">
+      Using AI-assisted and agentic workflows to accelerate development, exploration, debugging,
+      and delivery.
+    </p>
+
+    <ul class="tool-list" aria-label="AI tools">
+      {tools.map(({ name, icon }) => (
+        <li><SkillIcon name={icon} /><span>{name}</span></li>
+      ))}
+    </ul>
+
+    <ul class="capability-list" aria-label="AI and agent capabilities">
+      {capabilities.map((capability) => <li>{capability}</li>)}
     </ul>
   </div>
 </section>
@@ -25,9 +51,9 @@
 
   .capability-panel {
     display: grid;
-    gap: calc(var(--spacing) * 10);
+    gap: calc(var(--spacing) * 5);
     min-width: 0;
-    padding: calc(var(--spacing) * 6);
+    padding: calc(var(--spacing) * 5);
     border: 1px solid color-mix(in srgb, var(--color-accent) 28%, var(--color-border-subtle));
     border-inline-start-width: 3px;
     border-radius: var(--radius-medium);
@@ -41,63 +67,141 @@
   }
 
   h2 {
-    color: var(--color-primary);
-    font-size: var(--text-section);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--text-section--line-height);
-  }
-
-  header > p {
-    max-width: 40rem;
-    margin-top: calc(var(--spacing) * 4);
-    color: var(--color-secondary);
+    color: var(--color-accent);
     font-size: var(--text-lead);
+    font-weight: var(--font-weight-semibold);
     line-height: var(--text-lead--line-height);
   }
 
-  ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
-    gap: calc(var(--spacing) * 6);
+  .panel-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing) * 3);
   }
 
-  li {
-    position: relative;
-    padding-top: calc(var(--spacing) * 4);
-    padding-inline-start: calc(var(--spacing) * 4);
+  .ai-icon {
+    width: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 8);
+    flex: none;
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .featured-badge {
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+    color: var(--color-terminal);
+    border: 1px solid color-mix(in srgb, var(--color-terminal) 45%, var(--color-border-subtle));
+    border-radius: var(--radius-small);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .panel-description {
+    max-width: 40rem;
+    margin-top: calc(var(--spacing) * 4);
+    color: var(--color-secondary);
+    font-size: var(--text-small);
+    line-height: var(--text-body--line-height);
+  }
+
+  ul {
+    min-width: 0;
+  }
+
+  .tool-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: calc(var(--spacing) * 3) calc(var(--spacing) * 2);
+    padding-block-end: calc(var(--spacing) * 4);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .tool-list li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    min-width: 4.5rem;
+    max-width: 7rem;
+    color: var(--color-primary);
+    font-size: var(--text-small);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .tool-list li > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .tool-list .skill-icon {
+    width: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 7);
+  }
+
+  .capability-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--spacing) * 2);
+  }
+
+  .capability-list li {
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
     overflow-wrap: anywhere;
     color: var(--color-primary);
-    border-top: 1px solid var(--color-border-subtle);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  li::before {
-    position: absolute;
-    top: calc(var(--spacing) * 5);
-    left: 0;
-    width: calc(var(--spacing) * 1.5);
-    height: calc(var(--spacing) * 1.5);
-    border-radius: 50%;
-    background: var(--color-accent);
-    content: '';
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border-subtle));
+    border-radius: var(--radius-small);
+    font-size: var(--text-small);
   }
 
   @media (width >= theme(--breakpoint-md)) {
     .capability-panel {
-      padding: calc(var(--spacing) * 8);
+      padding: calc(var(--spacing) * 6);
     }
   }
 
-  @media (width >= theme(--breakpoint-lg)) {
+  @media (width >= theme(--breakpoint-xl)) {
     .capability-panel {
-      grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
-      align-items: center;
-      gap: calc(var(--spacing) * 12);
-      padding: calc(var(--spacing) * 10);
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      align-items: start;
+      column-gap: calc(var(--spacing) * 5);
+      row-gap: calc(var(--spacing) * 4);
+      padding: calc(var(--spacing) * 5);
     }
 
-    ul {
-      gap: calc(var(--spacing) * 4);
+    header {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .tool-list { grid-column: 1; grid-row: 2; }
+
+    .tool-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(4.5rem, 1fr));
+      justify-items: center;
+      padding-inline-end: calc(var(--spacing) * 5);
+      padding-block-end: 0;
+      border-bottom: 0;
+      border-inline-end: 1px solid var(--color-border-subtle);
+    }
+
+    .panel-description {
+      grid-column: 2;
+      grid-row: 1;
+      margin-top: 0;
+    }
+
+    .capability-list {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 </style>

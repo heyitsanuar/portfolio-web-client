@@ -2,22 +2,22 @@
 const traits = [
   {
     title: 'Continuous Learning',
-    description: 'Always exploring new tools, technologies, and better ways to build.',
+    description: 'Always exploring new technologies and better ways to build.',
     icon: 'learning',
   },
   {
     title: 'Team Collaboration',
-    description: 'Building better software through communication, feedback, and shared ownership.',
+    description: 'I enjoy working with others to turn ideas into real impact.',
     icon: 'collaboration',
   },
   {
     title: 'Problem Solving',
-    description: 'Breaking complex challenges into clear, practical solutions.',
+    description: 'I like tackling complex challenges and finding practical solutions.',
     icon: 'problem-solving',
   },
   {
     title: 'Product Mindset',
-    description: 'Looking beyond the code to understand the user and the problem being solved.',
+    description: 'Focused on building useful, user-centered experiences.',
     icon: 'product',
   },
 ] as const;
@@ -29,42 +29,43 @@ const traits = [
       <h2 id="about-title">02. ABOUT ME</h2>
       <span aria-hidden="true"></span>
     </div>
-    <p>Engineer by profession. Builder by curiosity.</p>
+    <p class="about-headline"><span>Engineer by </span><span class="accent-text">profession.</span><br /><span>Builder by </span><span class="accent-text">curiosity.</span></p>
+    <p class="about-intro">Lifelong self-learner with a strong commitment to continuous growth, both independently and through collaboration. I enjoy turning ideas into thoughtful digital experiences and solving complex problems with technology.</p>
   </header>
 
   <ul class="trait-list">
     {traits.map(({ title, description, icon }) => (
       <li>
         <article>
-          <div class="trait-heading">
-            {icon === 'learning' && (
+          {icon === 'learning' && (
               <svg class="trait-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M3 5.5c3.2-1.3 6-.9 9 1.1v12c-3-2-5.8-2.4-9-1.1v-12ZM21 5.5c-3.2-1.3-6-.9-9 1.1v12c3-2 5.8-2.4 9-1.1v-12Z" />
                 <path d="M12 6.6v12" />
               </svg>
-            )}
-            {icon === 'collaboration' && (
+          )}
+          {icon === 'collaboration' && (
               <svg class="trait-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <circle cx="9" cy="8" r="3" />
                 <circle cx="17" cy="9" r="2.5" />
                 <path d="M3.5 19c.6-3.2 2.4-5 5.5-5s4.9 1.8 5.5 5M14 14.5c2.9-.5 5 .9 6 3.5" />
               </svg>
-            )}
-            {icon === 'problem-solving' && (
+          )}
+          {icon === 'problem-solving' && (
               <svg class="trait-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M9 18h6M10 21h4M8.5 14.5a6 6 0 1 1 7 0c-.9.7-1.5 1.4-1.5 2.5h-4c0-1.1-.6-1.8-1.5-2.5Z" />
                 <path d="M12 3v1M4.9 5.9l.7.7M19.1 5.9l-.7.7" />
               </svg>
-            )}
-            {icon === 'product' && (
+          )}
+          {icon === 'product' && (
               <svg class="trait-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="m4 16 4-8 4 4 3-6 5 10H4Z" />
                 <path d="M12 4V2M18.5 5.5 20 4M5.5 5.5 4 4" />
               </svg>
-            )}
+          )}
+          <div class="trait-content">
             <h3>{title}</h3>
+            <p>{description}</p>
           </div>
-          <p>{description}</p>
         </article>
       </li>
     ))}
@@ -101,7 +102,7 @@ const traits = [
     background: var(--color-border-subtle);
   }
 
-  .about-heading > p {
+  .about-headline {
     margin-top: calc(var(--spacing) * 4);
     color: var(--color-primary);
     font-size: var(--text-section);
@@ -109,22 +110,23 @@ const traits = [
     line-height: var(--text-section--line-height);
   }
 
+  .accent-text {
+    color: var(--color-accent);
+  }
+
   .trait-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
     gap: calc(var(--spacing) * 6);
     margin-top: calc(var(--spacing) * 12);
   }
 
-  @media (width >= theme(--breakpoint-md)) {
-    .trait-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
   .trait-list article {
+    display: grid;
+    grid-template-columns: calc(var(--spacing) * 11) minmax(0, 1fr);
+    column-gap: calc(var(--spacing) * 3);
     height: 100%;
-    padding: calc(var(--spacing) * 5);
+    padding: calc(var(--spacing) * 3);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-small);
     background: color-mix(in srgb, var(--color-surface) 84%, transparent);
@@ -135,25 +137,40 @@ const traits = [
     font-weight: var(--font-weight-semibold);
   }
 
-  .trait-heading {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--spacing) * 3);
-  }
-
   .trait-icon {
-    width: calc(var(--spacing) * 7);
-    height: calc(var(--spacing) * 7);
+    width: calc(var(--spacing) * 10);
+    height: calc(var(--spacing) * 10);
     flex: none;
     fill: none;
     stroke: var(--color-accent);
-    stroke-width: 1.5;
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  .trait-list article > p {
-    margin-top: calc(var(--spacing) * 3);
+  .trait-content > p {
+    margin-top: calc(var(--spacing) * 1);
     color: var(--color-secondary);
+    font-size: var(--text-small);
+    line-height: var(--text-small--line-height);
+  }
+
+  .trait-content {
+    min-width: 0;
+  }
+
+  .about-intro {
+    max-width: 42rem;
+    margin-top: calc(var(--spacing) * 4);
+    color: var(--color-secondary);
+    font-size: var(--text-small);
+    font-weight: 400;
+    line-height: var(--text-body--line-height);
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    .trait-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 </style>
