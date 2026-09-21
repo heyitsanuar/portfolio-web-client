@@ -10,23 +10,32 @@ import { skillCategories, skillGroups } from '../data/skills';
     <p>Technologies and tools I use to turn ideas into products.</p>
   </div>
 
-  <div class="category-controls" aria-label="Skill categories" data-skill-controls hidden>
-    {skillCategories.map(({ id, label }) => (
-      <button type="button" data-skill-category={id} aria-pressed={id === 'all' ? 'true' : 'false'}>
-        {label}
-      </button>
-    ))}
-  </div>
+  <div class="skills-panel">
+    <div class="skills-panel-header">
+      <div class="category-controls" aria-label="Skill categories" data-skill-controls hidden>
+        {skillCategories.map(({ id, label }) => (
+          <button type="button" data-skill-category={id} aria-pressed={id === 'all' ? 'true' : 'false'}>
+            {label}
+          </button>
+        ))}
+      </div>
 
-  <div class="skill-groups" data-skill-groups>
-    <ul class="skill-inventory" aria-label="Technology skills inventory">
-      {skillGroups.map(({ id, skills }) => skills.map(({ name, icon }) => (
-        <li data-skill-item={id}>
-          <SkillIcon name={icon} />
-          <span>{name}</span>
-        </li>
-      )))}
-    </ul>
+      <div class="inventory-controls" data-inventory-controls hidden>
+        <button type="button" data-inventory-previous aria-label="Show previous technologies">↑</button>
+        <button type="button" data-inventory-next aria-label="Show more technologies">↓</button>
+      </div>
+    </div>
+
+    <div class="skill-groups" data-skill-groups tabindex="-1" aria-label="Technology skills inventory">
+      <ul class="skill-inventory">
+        {skillGroups.map(({ id, skills }) => skills.map(({ name, icon }) => (
+          <li data-skill-item={id}>
+            <SkillIcon name={icon} />
+            <span>{name}</span>
+          </li>
+        )))}
+      </ul>
+    </div>
   </div>
 
   <p class="filter-status" data-skill-status aria-live="polite"></p>
@@ -36,6 +45,19 @@ import { skillCategories, skillGroups } from '../data/skills';
   @reference "../styles/global.css";
 
   .skills {
+    min-width: 0;
+  }
+
+  .skills-panel {
+    min-width: 0;
+    margin-top: calc(var(--spacing) * 9);
+    padding-bottom: calc(var(--spacing) * 2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  }
+
+  .skills-panel-header {
     min-width: 0;
   }
 
@@ -68,17 +90,25 @@ import { skillCategories, skillGroups } from '../data/skills';
 
   .category-controls {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: var(--spacing);
-    margin-top: calc(var(--spacing) * 5);
+    min-width: 0;
+    padding-inline: var(--focus-offset);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-subtle) transparent;
+    border-bottom: 1px solid var(--color-border-subtle);
+    margin-top: 0;
   }
 
   .category-controls button {
+    flex: 0 0 auto;
     min-width: calc(var(--spacing) * 11);
     min-height: calc(var(--spacing) * 11);
     padding-inline: calc(var(--spacing) * 2);
     color: var(--color-secondary);
-    border-bottom: 1px solid transparent;
+    border-bottom: 2px solid transparent;
     border-radius: var(--radius-small);
     font-size: var(--text-small);
     cursor: pointer;
@@ -95,25 +125,84 @@ import { skillCategories, skillGroups } from '../data/skills';
 
   .category-controls button[aria-pressed='true'] {
     color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+    border-radius: var(--radius-small) var(--radius-small) 0 0;
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  }
+
+  .inventory-controls {
+    display: none;
+  }
+
+  .inventory-controls button {
+    min-width: calc(var(--spacing) * 11);
+    min-height: calc(var(--spacing) * 11);
+    color: var(--color-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-small);
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+    font-family: var(--font-mono);
+    font-size: var(--text-body);
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .inventory-controls button:hover:not(:disabled) {
+    color: var(--color-primary);
     border-color: var(--color-accent);
   }
 
+  .inventory-controls button:disabled {
+    cursor: default;
+    opacity: 0.45;
+  }
+
   @media (width >= theme(--breakpoint-lg)) {
+    .skills-panel-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: stretch;
+      column-gap: calc(var(--spacing) * 2);
+    }
+
     .category-controls {
-      gap: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
-      margin-top: calc(var(--spacing) * 6);
+      gap: calc(var(--spacing) * 2);
+      margin-top: 0;
     }
 
     .category-controls button {
-      padding-inline: calc(var(--spacing) * 3);
+      padding-inline: calc(var(--spacing) * 2);
       font-size: var(--text-body);
+    }
+
+    .skills[data-enhanced] .inventory-controls {
+      display: flex;
+      align-items: stretch;
+      gap: var(--spacing);
+      width: calc(var(--spacing) * 23);
+      min-width: calc(var(--spacing) * 23);
+    }
+
+    .skills[data-enhanced] .inventory-controls[hidden] {
+      display: none;
+    }
+
+    .skills[data-enhanced] .inventory-controls button:focus-visible {
+      outline: var(--focus-width) solid var(--focus-color);
+      outline-offset: var(--focus-offset);
     }
   }
 
   .skill-groups {
     display: grid;
     gap: calc(var(--spacing) * 7);
-    margin-top: calc(var(--spacing) * 9);
+    margin-top: calc(var(--spacing) * 2);
+  }
+
+  .skills[data-enhanced] .skill-groups {
+    --skill-row-height: calc(var(--spacing) * 22);
+    --skill-row-gap: calc(var(--spacing) * 1);
+    container-type: inline-size;
   }
 
   .skill-inventory {
@@ -154,6 +243,41 @@ import { skillCategories, skillGroups } from '../data/skills';
     }
   }
 
+  @media (width >= theme(--breakpoint-lg)) {
+    .skills[data-enhanced] .skill-groups {
+      position: relative;
+      height: calc((var(--skill-row-height) * 3) + (var(--skill-row-gap) * 2));
+      overflow-y: auto;
+      overscroll-behavior-block: contain;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border-subtle) transparent;
+      scroll-padding-block: var(--spacing);
+    }
+
+    .skills[data-enhanced] .skill-inventory {
+      grid-auto-rows: var(--skill-row-height);
+      row-gap: var(--skill-row-gap);
+    }
+
+    .skills[data-enhanced] .skill-groups.has-overflow {
+      box-shadow: inset 0 -1rem 1rem -1rem var(--color-page);
+    }
+
+    .skills[data-enhanced] .skill-groups:focus-visible {
+      outline: var(--focus-width) solid var(--focus-color);
+      outline-offset: var(--focus-offset);
+    }
+  }
+
+  @media (width >= theme(--breakpoint-lg)) {
+    @container (min-width: 40rem) {
+      .skills[data-enhanced] .skill-inventory {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        column-gap: calc(var(--spacing) * 2);
+      }
+    }
+  }
+
   .filter-status {
     position: absolute;
     width: 1px;
@@ -183,8 +307,30 @@ import { skillCategories, skillGroups } from '../data/skills';
   const buttons = controls ? Array.from(controls.querySelectorAll<HTMLButtonElement>('[data-skill-category]')) : [];
   const items = skills ? Array.from(skills.querySelectorAll<HTMLElement>('[data-skill-item]')) : [];
   const status = skills?.querySelector<HTMLElement>('[data-skill-status]');
+  const inventory = skills?.querySelector<HTMLElement>('[data-skill-groups]');
+  const inventoryControls = skills?.querySelector<HTMLElement>('[data-inventory-controls]');
+  const previousButton = skills?.querySelector<HTMLButtonElement>('[data-inventory-previous]');
+  const nextButton = skills?.querySelector<HTMLButtonElement>('[data-inventory-next]');
+  const desktopLayout = matchMedia('(min-width: 64rem)');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (skills && controls && buttons.length && items.length && status) {
+  if (skills && controls && buttons.length && items.length && status && inventory && inventoryControls && previousButton && nextButton) {
+
+    const updateInventoryAccess = () => {
+      const overflows = desktopLayout.matches && inventory.scrollHeight > inventory.clientHeight + 1;
+      inventory.tabIndex = overflows ? 0 : -1;
+      inventory.classList.toggle('has-overflow', overflows);
+      inventoryControls.hidden = !overflows;
+      previousButton.disabled = !overflows || inventory.scrollTop <= 1;
+      nextButton.disabled = !overflows || inventory.scrollTop + inventory.clientHeight >= inventory.scrollHeight - 1;
+    };
+
+    const scrollToEndpoint = (position: 'start' | 'end') => {
+      inventory.scrollTo({
+        top: position === 'start' ? 0 : inventory.scrollHeight - inventory.clientHeight,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth',
+      });
+    };
 
     const showCategory = (category: string) => {
       let visibleCount = 0;
@@ -199,6 +345,8 @@ import { skillCategories, skillGroups } from '../data/skills';
       });
 
       status.textContent = `${visibleCount} ${visibleCount === 1 ? 'technology' : 'technologies'} shown.`;
+      inventory.scrollTop = 0;
+      updateInventoryAccess();
     };
 
     controls.addEventListener('click', (event) => {
@@ -208,8 +356,13 @@ import { skillCategories, skillGroups } from '../data/skills';
       if (button?.dataset.skillCategory) showCategory(button.dataset.skillCategory);
     });
 
+    previousButton.addEventListener('click', () => scrollToEndpoint('start'));
+    nextButton.addEventListener('click', () => scrollToEndpoint('end'));
+    inventory.addEventListener('scroll', updateInventoryAccess, { passive: true });
+
     controls.hidden = false;
     skills.dataset.enhanced = '';
     showCategory('all');
+    desktopLayout.addEventListener('change', updateInventoryAccess);
   }
 </script>

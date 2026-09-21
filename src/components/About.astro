@@ -111,23 +111,24 @@ const traits = [
   }
 
   .accent-text {
-    color: var(--color-accent);
+    color: #9b7af5;
   }
 
   .trait-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-    gap: calc(var(--spacing) * 6);
+    row-gap: calc(var(--spacing) * 6);
+    column-gap: calc(var(--spacing) * 5);
     margin-top: calc(var(--spacing) * 12);
   }
 
   .trait-list article {
     display: grid;
-    grid-template-columns: calc(var(--spacing) * 11) minmax(0, 1fr);
+    grid-template-columns: calc(var(--spacing) * 12) minmax(0, 1fr);
     column-gap: calc(var(--spacing) * 3);
     height: 100%;
-    padding: calc(var(--spacing) * 3);
-    border: 1px solid var(--color-border-subtle);
+    padding: calc(var(--spacing) * 2.5);
+    border: 1px solid color-mix(in srgb, var(--color-border-subtle) 55%, transparent);
     border-radius: var(--radius-small);
     background: color-mix(in srgb, var(--color-surface) 84%, transparent);
   }
@@ -138,8 +139,9 @@ const traits = [
   }
 
   .trait-icon {
-    width: calc(var(--spacing) * 10);
-    height: calc(var(--spacing) * 10);
+    width: calc(var(--spacing) * 12);
+    height: calc(var(--spacing) * 12);
+    align-self: center;
     flex: none;
     fill: none;
     stroke: var(--color-accent);
