@@ -6,7 +6,7 @@ const linkedInUrl = 'https://www.linkedin.com/in/anuar-jimenez-io/';
 
 <section id="contact" class="contact" aria-labelledby="contact-title" data-motion-reveal>
   <div class="heading-row">
-    <h2 id="contact-title">05. LET'S TALK</h2>
+      <h2 id="contact-title"><span class="section-number">05.</span> LET'S TALK</h2>
     <span aria-hidden="true"></span>
   </div>
 
@@ -73,7 +73,7 @@ const linkedInUrl = 'https://www.linkedin.com/in/anuar-jimenez-io/';
     letter-spacing: var(--tracking-label);
   }
 
-  .heading-row > span {
+  .heading-row > span:not(.section-number) {
     width: min(12rem, 35vw);
     height: 1px;
     background: var(--color-border-subtle);

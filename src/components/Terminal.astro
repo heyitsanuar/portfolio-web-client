@@ -1,23 +1,39 @@
 <div class="terminal">
+  <div class="terminal-titlebar">
+    <span class="terminal-window-dots" aria-hidden="true">
+      <span class="terminal-window-dot terminal-window-dot-close"></span>
+      <span class="terminal-window-dot terminal-window-dot-minimize"></span>
+      <span class="terminal-window-dot terminal-window-dot-maximize"></span>
+    </span>
+    <span class="terminal-title">Anuar Jimenez</span>
+  </div>
   <div class="terminal-body">
-    <div class="terminal-static">
-      <p class="terminal-prompt">anuar@portfolio:~$</p>
-      <div class="terminal-profile">
-        <p>Software Engineer</p>
-        <p>Based in Mexico</p>
-        <p>Focused on modern web experiences</p>
-        <p>Focused on AI-assisted development</p>
+    <div class="terminal-history-scroll" aria-label="Terminal history" tabindex="0">
+      <div class="terminal-static">
+      <p class="terminal-command"><span class="terminal-command-prompt">$~</span><span class="terminal-command-text">whoami</span></p>
+      <p class="terminal-output">anuar jimenez</p>
+      <p class="terminal-command"><span class="terminal-command-prompt">$~</span><span class="terminal-command-text">cat about.txt</span></p>
+      <div class="terminal-output terminal-about-output">
+        <p>&gt; Software Engineer</p><p>&gt; Based in Mexico 🇲🇽</p><p>&gt; Building modern web experiences</p><p>&gt; AI-assisted developer</p><p>&gt; Always learning, always shipping</p>
+      </div>
+      <p class="terminal-command"><span class="terminal-command-prompt">$~</span><span class="terminal-command-text">ls interests/</span></p>
+      <p class="terminal-output terminal-interests-output">tech <span>travel</span> <span>coffee</span> <span>fitness</span> <span>learning</span></p>
+      <p class="terminal-command terminal-command-echo"><span class="terminal-command-prompt">$~</span><span class="terminal-command-text">echo <span class="terminal-command-argument">"Let's build something great!"</span></span></p>
+      <p class="terminal-output terminal-echo-output">Let's build something great!</p>
+      <p class="terminal-input-prompt">$~ <span class="terminal-caret" aria-hidden="true"></span></p>
+      </div>
+      <div class="terminal-history"></div>
+      <div class="terminal-animation" aria-hidden="true">
+        <div class="terminal-transcript"></div>
       </div>
     </div>
-    <div class="terminal-animation" aria-hidden="true">
-      <div class="terminal-transcript"></div>
-    </div>
     <div class="terminal-interactive" hidden>
-      <div class="terminal-history"></div>
       <form class="terminal-form">
         <label class="terminal-label" for="terminal-command">Terminal command</label>
-        <span class="terminal-input-prompt" aria-hidden="true">anuar@portfolio:~$</span>
-        <input id="terminal-command" name="command" type="text" autocomplete="off" spellcheck="false" />
+        <span id="terminal-command-hint" class="terminal-label">Try typing help to explore the terminal.</span>
+        <span class="terminal-input-prompt" aria-hidden="true">$~</span>
+        <span class="terminal-cursor" aria-hidden="true"></span>
+        <input id="terminal-command" name="command" type="text" autocomplete="off" spellcheck="false" aria-describedby="terminal-command-hint" />
       </form>
     </div>
   </div>
@@ -27,6 +43,7 @@
   @reference "../styles/global.css";
 
   .terminal {
+    --terminal-command-accent: #5effb2;
     min-width: 0;
     max-width: 42rem;
     overflow: hidden;
@@ -35,18 +52,95 @@
     background: var(--color-surface);
   }
 
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    min-height: calc(var(--spacing) * 10);
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    border-bottom: 1px solid var(--color-border-subtle);
+    color: var(--color-secondary);
+    font-size: 0.75rem;
+  }
+
+  .terminal-window-dots {
+    display: inline-flex;
+    gap: calc(var(--spacing) * 1.5);
+    flex: none;
+  }
+
+  .terminal-window-dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+  }
+
+  .terminal-window-dot-close { background: #ff5f57; }
+  .terminal-window-dot-minimize { background: #febc2e; }
+  .terminal-window-dot-maximize { background: #28c840; }
+
+  .terminal-title {
+    overflow-wrap: anywhere;
+  }
+
   .terminal-body {
     position: relative;
+    display: flex;
+    flex-direction: column;
     min-width: 0;
+    min-height: 0;
     padding: calc(var(--spacing) * 5);
     color: var(--color-secondary);
     font-family: var(--font-mono);
     white-space: pre-wrap;
   }
 
+  .terminal-history-scroll {
+    min-height: 0;
+    max-height: min(60vh, 30rem);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+
+  .terminal-history-scroll:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: -2px;
+  }
+
   .terminal-prompt {
     overflow-wrap: anywhere;
-    color: var(--color-terminal);
+    color: var(--terminal-command-accent);
+  }
+
+  .terminal-static .terminal-command,
+  .terminal-static .terminal-output,
+  .terminal-static .terminal-input-prompt {
+    margin: 0;
+  }
+
+  .terminal-static .terminal-command + .terminal-output,
+  .terminal-static .terminal-output + .terminal-command {
+    margin-top: calc(var(--spacing) * 2);
+  }
+
+  .terminal-about-output p { margin: 0; }
+  .terminal-about-output { display: grid; gap: calc(var(--spacing) * 0.5); padding-inline-start: 1ch; }
+  :global(.terminal-echo-output) { color: #d45cff; text-shadow: 0 0 8px #d45cff80; }
+  .terminal-interests-output,
+  :global(.terminal-directory-output) { display: flex; flex-wrap: wrap; gap: 0 1.5ch; color: #67e8f9; }
+  :global(.terminal-command-argument) { color: var(--color-accent); }
+  .terminal-caret { display: inline-block; width: 0.6ch; height: 1em; margin-inline-start: 0.25ch; vertical-align: -0.15em; background: var(--terminal-command-accent); }
+
+  :global(.terminal-command-prompt) {
+    color: var(--terminal-command-accent);
+  }
+
+  :global(.terminal-command-text) {
+    color: var(--terminal-command-accent);
+  }
+
+  :global(.terminal-command-echo .terminal-command-text) {
+    color: var(--color-accent);
   }
 
   .terminal-profile {
@@ -69,7 +163,10 @@
     overflow-wrap: anywhere;
   }
 
-  .terminal-command {
+  :global(.terminal-command) {
+    display: flex;
+    align-items: baseline;
+    gap: 2ch;
     --command-indent: clamp(0.5rem, 1.25ch, 1.25rem);
     padding-inline-start: var(--command-indent);
     text-indent: calc(-1 * var(--command-indent));
@@ -116,9 +213,34 @@
   .terminal-form {
     display: flex;
     align-items: baseline;
+    gap: 1ch;
     min-width: 0;
     margin-top: calc(var(--spacing) * 3);
     border-bottom: 2px solid transparent;
+  }
+
+  .terminal-cursor {
+    display: none;
+    width: 0.65ch;
+    height: 1em;
+    flex: none;
+    background: var(--terminal-command-accent);
+  }
+
+  .terminal-form.cursor-visible .terminal-cursor {
+    display: block;
+    margin-inline-end: -1ch;
+    animation: terminal-cursor-blink 1s steps(1, end) infinite;
+  }
+
+  .terminal-form.cursor-visible input { caret-color: transparent; }
+
+  @keyframes terminal-cursor-blink {
+    50% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terminal-form.cursor-visible .terminal-cursor { animation: none; }
   }
 
   .terminal-label {
@@ -134,7 +256,7 @@
 
   .terminal-input-prompt {
     flex: 0 0 auto;
-    color: var(--color-terminal);
+    color: var(--terminal-command-accent);
   }
 
   .terminal-form input {
@@ -158,6 +280,8 @@
       max-width: none;
       min-height: 18rem;
     }
+
+    .terminal-history-scroll { max-height: min(42vh, 30rem); }
   }
 </style>
 
@@ -169,21 +293,35 @@
     const animation = terminal.querySelector<HTMLElement>('.terminal-animation');
     const transcript = terminal.querySelector<HTMLElement>('.terminal-transcript');
     const terminalBody = terminal.querySelector<HTMLElement>('.terminal-body');
+    const historyScroll = terminal.querySelector<HTMLElement>('.terminal-history-scroll');
     const interactive = terminal.querySelector<HTMLElement>('.terminal-interactive');
     const form = terminal.querySelector<HTMLFormElement>('.terminal-form');
     const input = terminal.querySelector<HTMLInputElement>('#terminal-command');
     const history = terminal.querySelector<HTMLElement>('.terminal-history');
+    const cursor = terminal.querySelector<HTMLElement>('.terminal-cursor');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sequence = [
-      { command: 'whoami', output: ['Software Engineer'] },
+      { command: 'whoami', output: ['anuar jimenez'] },
       {
         command: 'cat about.txt',
-        output: ['Based in Mexico', 'Focused on modern web experiences', 'Focused on AI-assisted development'],
+        output: ['> Software Engineer', '> Based in Mexico 🇲🇽', '> Building modern web experiences', '> AI-assisted developer', '> Always learning, always shipping'],
       },
-      { command: 'ls interests/', output: [] },
+      { command: 'ls interests/', output: ['tech    travel    coffee    fitness    learning'] },
       { command: 'echo "Let\'s build something great!"', output: ["Let's build something great!"] },
     ];
     let hasPlayed = false;
+    let playbackId = 0;
+    let isPlaying = false;
+    let browsingHistory = false;
+
+    const scrollHistoryToEnd = (force = false) => {
+      if (!historyScroll || (!force && browsingHistory)) return;
+      historyScroll.scrollTop = historyScroll.scrollHeight;
+    };
+
+    historyScroll?.addEventListener('scroll', () => {
+      browsingHistory = historyScroll.scrollHeight - historyScroll.scrollTop - historyScroll.clientHeight > 24;
+    });
 
     const commands = new Map<string, { target?: string; output?: string[] }>([
       ['help', { output: ['help', 'about', 'skills', 'experience', 'projects', 'contact', 'clear'] }],
@@ -194,6 +332,9 @@
       ['contact', { target: '#contact' }],
       ['clear', {}],
       ['sudo hire anuar', { target: '#contact', output: ['Permission granted. Opening contact section...'] }],
+      ['whoami', { output: ['anuar jimenez'] }],
+      ['cat about.txt', { output: ['> Software Engineer', '> Based in Mexico 🇲🇽', '> Building modern web experiences', '> AI-assisted developer', '> Always learning, always shipping'] }],
+      ['ls interests/', { output: ['tech    travel    coffee    fitness    learning'] }],
     ]);
 
     const renderLine = (text: string, className: string) => {
@@ -204,12 +345,41 @@
       return line;
     };
 
+    const renderDirectoryLine = (text: string, target: HTMLElement = transcript as HTMLElement) => {
+      const line = document.createElement('p');
+      line.className = 'terminal-output terminal-directory-output';
+      line.textContent = text;
+      target.append(line);
+      return line;
+    };
+
+    const renderCommandLine = (command: string, target: HTMLElement = transcript as HTMLElement) => {
+      const line = document.createElement('p');
+      line.className = command.startsWith('echo ') ? 'terminal-command terminal-command-echo' : 'terminal-command';
+      const prompt = document.createElement('span');
+      prompt.className = 'terminal-command-prompt';
+      prompt.textContent = '$~';
+      const commandText = document.createElement('span');
+      commandText.className = 'terminal-command-text';
+      if (command.startsWith('echo ')) {
+        const argument = document.createElement('span');
+        argument.className = 'terminal-command-argument';
+        argument.textContent = command.slice(5);
+        commandText.append('echo ', argument);
+      } else {
+        commandText.textContent = command;
+      }
+      line.append(prompt, commandText);
+      target.append(line);
+      return commandText;
+    };
+
     const renderFinalTranscript = () => {
       if (!transcript) return;
       transcript.replaceChildren();
       sequence.forEach(({ command, output }) => {
-        renderLine(`anuar@portfolio:~$ ${command}`, 'terminal-command');
-        output.forEach((line) => renderLine(line, 'terminal-output'));
+        renderCommandLine(command);
+        output.forEach((line) => command === 'ls interests/' ? renderDirectoryLine(line) : renderLine(line, command.startsWith('echo ') ? 'terminal-output terminal-echo-output' : 'terminal-output'));
       });
     };
 
@@ -243,11 +413,17 @@
     const showInteractivePrompt = () => {
       if (!interactive) return;
       interactive.hidden = false;
+      terminal.classList.add('terminal-ready');
+      updateCursor();
     };
 
     const appendHistoryLine = (text: string, className: string, target?: HTMLElement | null) => {
       target ??= history;
       if (!target) return;
+      if (className === 'terminal-command' && text.startsWith('$~ ')) {
+        renderCommandLine(text.slice(3), target);
+        return;
+      }
       const line = document.createElement('p');
       line.className = className;
       line.textContent = text;
@@ -265,11 +441,12 @@
       input.value = '';
       if (!submitted) return;
 
-      appendHistoryLine(`anuar@portfolio:~$ ${submitted}`, 'terminal-command');
+      appendHistoryLine(`$~ ${submitted}`, 'terminal-command');
 
       if (submitted === 'clear') {
+        terminal.classList.remove('terminal-ready');
         history.replaceChildren();
-        input.focus();
+        void play(true);
         return;
       }
 
@@ -280,36 +457,88 @@
         return;
       }
 
-      command.output?.forEach((line) => appendHistoryLine(line, 'terminal-output'));
+      command.output?.forEach((line) => submitted === 'ls interests/' ? renderDirectoryLine(line, history) : appendHistoryLine(line, submitted.startsWith('echo ') ? 'terminal-output terminal-echo-output' : 'terminal-output'));
+      scrollHistoryToEnd(true);
       if (command.target) navigateTo(command.target);
       input.focus();
     });
 
-    const play = async () => {
-      if (hasPlayed || !transcript || !staticContent) return;
+    const updateCursor = () => {
+      if (!form || !input || !cursor) return;
+      form.classList.toggle('cursor-visible', input.value.length === 0);
+    };
+
+    input?.addEventListener('focus', updateCursor);
+    input?.addEventListener('blur', updateCursor);
+    input?.addEventListener('input', updateCursor);
+
+    const play = async (replay = false) => {
+      if (isPlaying || !transcript || !staticContent || !interactive || !input) return;
+      if (!replay && hasPlayed) return;
       hasPlayed = true;
-      reserveTranscriptSpace();
+      isPlaying = true;
+      const currentPlayback = ++playbackId;
+      interactive.hidden = true;
+      input.disabled = true;
+      if (replay) {
+        history?.replaceChildren();
+        transcript.replaceChildren();
+        terminalBody?.style.removeProperty('min-height');
+        terminal.classList.remove('is-complete', 'is-cleared');
+        browsingHistory = false;
+        if (historyScroll) historyScroll.scrollTop = 0;
+      }
       terminal.classList.add('is-animating');
+      reserveTranscriptSpace();
+
+      if (reducedMotion.matches) {
+        renderFinalTranscript();
+        terminal.classList.remove('is-animating');
+        terminal.classList.add('is-complete');
+        isPlaying = false;
+        input.disabled = false;
+        showInteractivePrompt();
+        input.focus({ preventScroll: true });
+        updateCursor();
+        return;
+      }
 
       for (const { command, output } of sequence) {
-        const commandLine = renderLine('', 'terminal-command');
-        await typeLine(commandLine, `anuar@portfolio:~$ ${command}`);
-        await new Promise((resolve) => window.setTimeout(resolve, 180));
-        for (const line of output) {
-          renderLine(line, 'terminal-output');
+        if (currentPlayback !== playbackId) return;
+        const commandLine = renderCommandLine('');
+        await typeLine(commandLine, command);
+        if (currentPlayback !== playbackId) return;
+        if (command.startsWith('echo ')) {
+          commandLine.replaceChildren('echo ');
+          const argument = document.createElement('span');
+          argument.className = 'terminal-command-argument';
+          argument.textContent = command.slice(5);
+          commandLine.append(argument);
         }
+        await new Promise((resolve) => window.setTimeout(resolve, 180));
+        if (currentPlayback !== playbackId) return;
+        for (const line of output) {
+          command === 'ls interests/' ? renderDirectoryLine(line) : renderLine(line, command.startsWith('echo ') ? 'terminal-output terminal-echo-output' : 'terminal-output');
+        }
+        scrollHistoryToEnd();
         await new Promise((resolve) => window.setTimeout(resolve, 220));
       }
 
+      if (currentPlayback !== playbackId) return;
       terminal.classList.remove('is-animating');
       terminal.classList.add('is-complete');
+      isPlaying = false;
+      input.disabled = false;
       showInteractivePrompt();
+      input.focus({ preventScroll: true });
+      updateCursor();
     };
 
     if (reducedMotion.matches) {
       reserveTranscriptSpace();
       renderFinalTranscript();
       terminal.classList.add('is-complete');
+      input && (input.disabled = false);
       showInteractivePrompt();
     } else {
       const observer = new IntersectionObserver(([entry]) => {

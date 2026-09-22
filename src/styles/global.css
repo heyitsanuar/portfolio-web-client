@@ -97,6 +97,10 @@
     gap: var(--section-gap);
   }
 
+  .section-number {
+    color: #5effb2;
+  }
+
   [data-motion-reveal] {
     opacity: 1;
     transform: translateY(0);
