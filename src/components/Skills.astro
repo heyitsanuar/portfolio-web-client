@@ -5,7 +5,7 @@ import { skillCategories, skillGroups } from '../data/skills';
 
 <section id="skills" class="skills" aria-labelledby="skills-title" data-skills>
   <div class="heading-row">
-    <h2 id="skills-title">03. SKILLS</h2>
+    <h2 id="skills-title"><span class="section-number">03.</span> SKILLS</h2>
     <span aria-hidden="true"></span>
     <p>Technologies and tools I use to turn ideas into products.</p>
   </div>
@@ -76,7 +76,7 @@ import { skillCategories, skillGroups } from '../data/skills';
     letter-spacing: var(--tracking-label);
   }
 
-  .heading-row > span {
+  .heading-row > span:not(.section-number) {
     width: min(12rem, 35vw);
     height: 1px;
     background: var(--color-border-subtle);
@@ -227,6 +227,8 @@ import { skillCategories, skillGroups } from '../data/skills';
   .skill-inventory li > span {
     min-width: 0;
     overflow-wrap: anywhere;
+    font-size: var(--text-small);
+    line-height: 1.45;
   }
 
   .skill-inventory li[hidden] {

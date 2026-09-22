@@ -6,7 +6,7 @@ import { projects } from '../data/projects';
 <section id="projects" class="projects" aria-labelledby="projects-title" data-project-carousel data-motion-reveal>
   <header class="projects-heading">
     <div class="heading-row">
-      <h2 id="projects-title">01. PROJECTS</h2>
+      <h2 id="projects-title"><span class="section-number">01.</span> PROJECTS</h2>
       <span aria-hidden="true"></span>
     </div>
     <p>Things I've built, explored, and learned from.</p>
@@ -59,7 +59,7 @@ import { projects } from '../data/projects';
     letter-spacing: var(--tracking-label);
   }
 
-  .heading-row span {
+  .heading-row > span:not(.section-number) {
     width: min(12rem, 35vw);
     height: 1px;
     background: var(--color-border-subtle);

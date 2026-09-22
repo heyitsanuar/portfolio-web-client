@@ -4,7 +4,7 @@ import { navigation } from '../data/navigation';
 
 <header class="navigation" data-navigation>
   <div class="content-container toolbar">
-    <a class="brand" href="#home">Anuar Jimenez</a>
+    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span><span>Anuar Jimenez</span></a>
     <nav class="inline-navigation" aria-label="Primary">
       <ul>
         {navigation.map(({ label, href }) => (
@@ -52,10 +52,34 @@ import { navigation } from '../data/navigation';
     color: var(--color-secondary);
     border-radius: var(--radius-small);
   }
-  .brand { color: var(--color-primary); font-weight: var(--font-weight-semibold); }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+  }
+  .brand-mark { color: var(--color-accent); }
   ul { display: flex; flex-wrap: wrap; gap: calc(var(--spacing) * 4); }
   .inline-navigation { width: 100%; }
-  a:hover, a[aria-current='location'] { color: var(--color-accent); text-decoration: underline; text-underline-offset: 0.3em; }
+  a:hover, a[aria-current='location'] { color: var(--color-accent); }
+  dialog a[aria-current='location'] { text-decoration: underline; text-underline-offset: 0.3em; }
+  .inline-navigation a { position: relative; text-decoration: none; }
+  .inline-navigation a::after {
+    position: absolute;
+    inset-inline-start: 50%;
+    bottom: 0;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    content: '';
+    opacity: 0;
+    transform: translate(-50%, 0.65rem);
+  }
+  .inline-navigation a[aria-current='location']::after { opacity: 1; }
   a:active { color: var(--color-accent-hover); }
   button { padding-inline: calc(var(--spacing) * 3); cursor: pointer; }
   button:hover { color: var(--color-accent); background: var(--color-surface); }
@@ -84,7 +108,21 @@ import { navigation } from '../data/navigation';
   dialog ul { flex-direction: column; gap: calc(var(--spacing) * 2); }
   dialog a { width: 100%; }
   @media (width >= theme(--breakpoint-lg)) {
-    .toolbar { flex-wrap: nowrap; }
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      flex-wrap: nowrap;
+    }
+    .brand { grid-column: 1; }
+    .inline-navigation {
+      grid-column: 2;
+      justify-self: center;
+    }
+    .inline-navigation ul { gap: calc(var(--spacing) * 6); }
+    .toolbar::after {
+      grid-column: 3;
+      content: '';
+    }
     .inline-navigation, .navigation[data-enhanced] .inline-navigation { display: block; width: auto; }
     .navigation[data-enhanced] .menu-trigger { display: none; }
   }
